@@ -1,0 +1,112 @@
+{
+  "sort-order": [
+    [
+      "content",
+      "position",
+      "top",
+      "right",
+      "bottom",
+      "left",
+      "z-index"
+    ],
+    [
+      "display",
+      "visibility",
+      "flex",
+      "grid",
+      "align-items",
+      "justify-content",
+      "flex-wrap",
+      "flex-direction",
+      "grid-template-columns",
+      "grid-template-rows"
+    ],
+    [
+      "width",
+      "min-width",
+      "max-width",
+      "height",
+      "min-height",
+      "max-height"
+    ],
+    [
+      "margin",
+      "margin-top",
+      "margin-right",
+      "margin-bottom",
+      "margin-left",
+      "padding",
+      "padding-top",
+      "padding-right",
+      "padding-bottom",
+      "padding-left"
+    ],
+    [
+      "border",
+      "border-width",
+      "border-style",
+      "border-color",
+      "border-radius",
+      "box-shadow"
+    ],
+    [
+      "background",
+      "background-color",
+      "background-image",
+      "background-size",
+      "background-position",
+      "background-repeat",
+      "opacity"
+    ],
+    [
+      "color",
+      "font",
+      "font-size",
+      "font-weight",
+      "font-style",
+      "font-family",
+      "text-align",
+      "text-transform",
+      "letter-spacing",
+      "line-height",
+      "white-space",
+      "word-spacing"
+    ],
+    [
+      "overflow",
+      "cursor",
+      "visibility",
+      "clip",
+      "resize",
+      "user-select",
+      "pointer-events"
+    ],
+    [
+      "transition",
+      "animation",
+      "transform",
+      "will-change"
+    ]
+  ],
+  "remove-empty-rulesets": true,
+  "always-semicolon": true,
+  "block-indent": "  ",
+  "color-case": "upper",
+  "color-shorthand": false,
+  "element-case": "lower",
+  "eof-newline": true,
+  "leading-zero": true,
+  "quotes": "double",
+  "space-before-colon": "",
+  "space-after-colon": " ",
+  "space-before-combinator": " ",
+  "space-after-combinator": " ",
+  "space-before-opening-brace": " ",
+  "space-after-opening-brace": "\n  ",
+  "space-after-selector-delimiter": "\n",
+  "space-before-selector-delimiter": "",
+  "space-before-closing-brace": "\n",
+  "strip-spaces": true,
+  "unitless-zero": true,
+  "vendor-prefix-align": true
+}
