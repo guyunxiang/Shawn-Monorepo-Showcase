@@ -24,8 +24,8 @@ This project includes two implementations:
 - React Router (for navigation, if needed)
 
 ## Live Preview
-- 🔗 **Static HTML Demo:** [GitHub Pages Link](https://your-github-username.github.io/LandingPage-LaslesVPN/static-html) *(Replace with actual link)*
-- 🔗 **React + Tailwind Demo:** [Vercel/Netlify Link](https://your-vercel-or-netlify-link.com) *(Replace with actual link)*
+- 🔗 **Static HTML Demo:** [GitHub Pages Link](https://github.com/guyunxiang/shawns-showcase/tree/main/LandingPage-LaslesVPN/static-html)
+- 🔗 **React + Tailwind Demo:** [Vercel Link](https://github.com/guyunxiang/shawns-showcase/tree/main/LandingPage-LaslesVPN/react-tailwind)
 
 ## Project Structure
 ```
@@ -68,8 +68,4 @@ npm run dev
 
 ## License
 This project is open-source under the MIT License. The Figma design is a free resource from the Figma Community, and its usage should comply with Figma’s licensing terms.
-
----
-
-Feel free to contribute, suggest improvements, or fork the repository for your own projects! 🚀
 
