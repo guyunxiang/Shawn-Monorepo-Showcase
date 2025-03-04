@@ -1,12 +1,14 @@
 @media screen and (max-width: 1140px) {
   .container {
     width: 100%;
+
     padding: 0 1rem;
   }
 
   .navbar .menu {
-    gap: 1rem;
     padding: 0;
+
+    gap: 1rem;
   }
 
   main {
@@ -41,8 +43,8 @@
   }
 
   .hero-buttons a.btn {
-    height: 45px;
     width: 180px;
+    height: 45px;
   }
 
   .data {
@@ -63,9 +65,11 @@
 
   .plan-card {
     flex: 1 0 0;
-    padding: 2rem 0;
+
     min-width: auto;
     min-height: unset;
+
+    padding: 2rem 0;
   }
 
   .network {
@@ -85,9 +89,9 @@
   }
 
   .companies ul {
-    gap: 1rem;
-
     justify-content: center;
+
+    gap: 1rem;
   }
 
   .companies ul li img {

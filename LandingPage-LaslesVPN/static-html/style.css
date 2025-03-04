@@ -164,8 +164,8 @@ header {
 
 .menu li a.sign-up {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 
   width: 150px;
   height: 45px;
@@ -189,7 +189,7 @@ main {
   padding-top: 100px;
 }
 
-.hero>.container {
+.hero > .container {
   display: flex;
 
   gap: 40px;
