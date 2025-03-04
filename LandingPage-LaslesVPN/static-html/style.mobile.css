@@ -1,0 +1,191 @@
+@media screen and (max-width: 768px) {
+
+  .container {
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  header {
+    padding-top: 0;
+  }
+
+  header .container {
+    padding: .5rem 1rem;
+  }
+
+  header .menu {
+    display: none;
+  }
+
+  header nav::after {
+    content: '≡';
+    font-size: 2rem;
+  }
+
+  main {
+    padding-top: 2rem;
+  }
+
+  .hero>.container {
+    flex-direction: column-reverse;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-description {
+    margin-bottom: 2rem;
+  }
+
+  .hero-buttons a {
+    height: 45px;
+    width: 100%;
+  }
+
+  .data {
+    margin-top: 4rem;
+    height: auto;
+  }
+
+  .data-list {
+    flex-direction: column;
+    padding: 0;
+    /* gap: 1rem; */
+  }
+
+  .data-item {
+    padding: 1rem;
+    width: 100%;
+    text-align: right;
+    border-right: 0;
+    justify-content: space-between;
+
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .data-item:last-child {
+    border-bottom: 0;
+  }
+
+  .data-item p {
+    font-size: 1rem;
+  }
+
+  .features {
+    padding: 4rem 0;
+  }
+
+  .features .container {
+    flex-direction: column;
+  }
+
+  .features-title {
+    font-size: 2rem;
+  }
+
+  .plans {
+    padding: 2rem 0;
+  }
+
+  .plan-title {
+    font-size: 2rem;
+  }
+
+  .plan-cards {
+    flex-direction: column;
+
+    gap: 1rem;
+
+    margin-top: 1rem;
+  }
+
+  .plan-card {
+    width: 100%;
+    padding: 1rem 0;
+    min-width: min-content;
+    min-height: min-content;
+  }
+
+  .network {
+    padding: 2rem 0;
+  }
+
+  .network-title {
+    font-size: 2rem;
+  }
+
+  .network-image {
+    margin-top: 2rem;
+  }
+
+  .companies {
+    margin-top: 2rem;
+  }
+
+  .companies ul {
+    display: flex;
+    flex-wrap: wrap;
+
+    justify-content: center;
+  }
+
+  .companies ul li:nth-child(n+4) {
+    grid-column: span 1;
+  }
+
+  .companies ul li img {
+    height: 3rem;
+    aspect-ratio: 147/60;
+  }
+
+  .customers {
+    padding: 2rem 0;
+  }
+
+  .customers-title {
+    font-size: 2rem;
+  }
+
+  .subscription {
+    position: relative;
+  }
+
+  .customers-cards {
+    overflow-x: auto;
+  }
+
+  .customers-slider-arrows img {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .subscription {
+    position: relative;
+
+    transform: none;
+  }
+
+  .subscription .container {
+    padding: 1rem;
+
+    gap: 1rem;
+  }
+
+  .subscription-title {
+    font-size: 1.5rem;
+  }
+
+  .subscription .btn-primary {
+    padding: .75rem 1.5rem;
+  }
+
+  footer {
+    padding: 2rem 1rem;
+  }
+
+  footer .container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

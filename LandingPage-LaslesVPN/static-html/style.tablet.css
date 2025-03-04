@@ -1,0 +1,131 @@
+@media screen and (max-width: 1140px) {
+  .container {
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  .navbar .menu {
+    gap: 1rem;
+    padding: 0;
+  }
+
+  main {
+    padding-top: 3rem;
+  }
+
+  .menu li a.sign-up {
+    width: 100px;
+    ;
+  }
+
+  .hero,
+  .data,
+  .features,
+  .plans,
+  .network,
+  .customers,
+  .subscription {
+    padding: 2rem 0;
+  }
+
+  .hero .container {
+    gap: 1rem;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-description {
+    margin-bottom: 2rem;
+  }
+
+  .hero-buttons a.btn {
+    height: 45px;
+    width: 180px;
+  }
+
+  .data {
+    margin-top: 0;
+  }
+
+  .features .container {
+    gap: 1rem;
+  }
+
+  .features-title {
+    font-size: 1.5rem;
+  }
+
+  .plan-cards {
+    gap: 1rem;
+  }
+
+  .plan-card {
+    flex: 1 0 0;
+    padding: 2rem 0;
+    min-width: auto;
+    min-height: unset;
+  }
+
+  .network {
+    padding: 2rem 0 4rem;
+  }
+
+  .network-title {
+    font-size: 1.8rem;
+  }
+
+  .network-image {
+    margin-top: 4rem;
+  }
+
+  .companies {
+    margin-top: 4rem;
+  }
+
+  .companies ul {
+    gap: 1rem;
+
+    justify-content: center;
+  }
+
+  .companies ul li img {
+    width: 100%;
+    height: auto;
+  }
+
+  .customers-cards {
+    overflow-x: auto;
+  }
+
+  .subscription {
+    position: relative;
+
+    transform: none;
+  }
+
+  .subscription .container {
+    padding: 0rem 3rem;
+  }
+
+  .subscription-title {
+    font-size: 1.8rem;
+  }
+
+  .subscription .btn-primary {
+    padding: 1rem 3rem;
+  }
+
+  footer {
+    padding: 4rem 2rem;
+  }
+
+  footer .container {
+    gap: 1rem;
+  }
+
+  .footer-right {
+    gap: 2rem;
+  }
+}

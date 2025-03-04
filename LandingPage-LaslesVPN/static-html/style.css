@@ -123,6 +123,7 @@ header {
   width: 1140px;
 
   margin: 0 auto;
+  padding: 0 1rem;
 }
 
 .navbar {
@@ -162,7 +163,9 @@ header {
 }
 
 .menu li a.sign-up {
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   width: 150px;
   height: 45px;
@@ -172,7 +175,6 @@ header {
 
   color: var(--primary-color);
   text-align: center;
-  line-height: 45px;
 }
 
 .menu li a.sign-up:hover {
@@ -187,14 +189,14 @@ main {
   padding-top: 100px;
 }
 
-.hero > .container {
+.hero>.container {
   display: flex;
 
   gap: 40px;
 }
 
 .hero-content {
-  width: 50%;
+  flex: 1 0 0;
 
   gap: 20px;
 }
@@ -214,10 +216,12 @@ main {
   line-height: 1.875;
 }
 
-.hero-buttons a {
+.hero-buttons a.btn {
   position: relative;
 
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   width: 250px;
   height: 65px;
@@ -228,7 +232,6 @@ main {
 
   color: #FFFFFF;
   text-align: center;
-  line-height: 65px;
 
   text-decoration: none;
 }
@@ -252,7 +255,8 @@ main {
 }
 
 .hero-image {
-  width: 50%;
+  flex: 1 0 0;
+
   max-width: 611px;
 }
 
@@ -269,13 +273,6 @@ main {
   margin-top: 100px;
 }
 
-.data .container {
-  border-radius: 10px;
-  box-shadow: 0 20px 50px var(--shadow-black-color);
-
-  background-color: #FFFFFF;
-}
-
 .data-list {
   display: flex;
   align-items: center;
@@ -285,6 +282,11 @@ main {
 
   margin: 0;
   padding: 0 40px;
+
+  border-radius: 10px;
+  box-shadow: 0 20px 50px var(--shadow-black-color);
+
+  background-color: #FFFFFF;
 
   list-style: none;
 }
@@ -340,7 +342,7 @@ main {
 
 .features .features-image,
 .features .features-content {
-  width: 50%;
+  flex: 1 0 0;
 }
 
 .features .features-image img {
@@ -352,8 +354,6 @@ main {
   display: flex;
   justify-content: center;
   flex-direction: column;
-
-  margin-left: 45px;
 }
 
 .features-title {
@@ -396,7 +396,7 @@ main {
   margin: 0;
 }
 
-.plan {
+.plans {
   padding: 80px 0;
 
   background-color: var(--background-color);
@@ -498,6 +498,10 @@ main {
 
 .plan-features-item p {
   margin: 0;
+}
+
+.plan-footer a.btn {
+  display: inline-block;
 }
 
 .features-buttons {
