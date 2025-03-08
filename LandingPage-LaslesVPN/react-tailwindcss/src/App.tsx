@@ -332,7 +332,7 @@ function App() {
                   </a>
                 ))}
               </div>
-              <p className="text-gray-400 text-sm">©2020 LaslesVPN</p>
+              <p className="text-gray-400 text-sm">©2025 LaslesVPN Powerd by Yunxiang Gu</p>
             </div>
 
             <div className="flex md:flex-1 gap-12 md:justify-end">
