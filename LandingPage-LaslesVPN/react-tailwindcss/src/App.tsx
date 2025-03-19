@@ -4,6 +4,15 @@ import './App.css'
 function App() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Scroll function
+  const scrollToSection = (id: string) => {
+    setMobileMenuOpen(false);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const Features = () => {
     const featuresData = [
@@ -69,11 +78,11 @@ function App() {
 
             {/* Desktop Menu */}
             <ul className="hidden md:flex space-x-6 lg:space-x-8">
-              <li><a href="#" className="hover:text-[#F53838]">About</a></li>
-              <li><a href="#" className="hover:text-[#F53838]">Features</a></li>
-              <li><a href="#" className="hover:text-[#F53838]">Pricing</a></li>
-              <li><a href="#" className="hover:text-[#F53838]">Testimonials</a></li>
-              <li><a href="#" className="hover:text-[#F53838]">Help</a></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('about'); }} className="hover:text-[#F53838]">About</a></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('features'); }} className="hover:text-[#F53838]">Features</a></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('pricing'); }} className="hover:text-[#F53838]">Pricing</a></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('testimonials'); }} className="hover:text-[#F53838]">Testimonials</a></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('help'); }} className="hover:text-[#F53838]">Help</a></li>
             </ul>
 
             {/* Auth buttons */}
@@ -95,11 +104,11 @@ function App() {
           {mobileMenuOpen && (
             <div className="md:hidden mt-4 py-4 bg-white border-t border-gray-200">
               <ul className="flex flex-col space-y-4 px-4">
-                <li><a href="#" className="block hover:text-[#F53838]">About</a></li>
-                <li><a href="#" className="block hover:text-[#F53838]">Features</a></li>
-                <li><a href="#" className="block hover:text-[#F53838]">Pricing</a></li>
-                <li><a href="#" className="block hover:text-[#F53838]">Testimonials</a></li>
-                <li><a href="#" className="block hover:text-[#F53838]">Help</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('about'); }} className="block hover:text-[#F53838]">About</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('features'); }} className="block hover:text-[#F53838]">Features</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('pricing'); }} className="block hover:text-[#F53838]">Pricing</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('testimonials'); }} className="block hover:text-[#F53838]">Testimonials</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('help'); }} className="block hover:text-[#F53838]">Help</a></li>
                 <li><a href="#" className="block font-medium hover:text-[#F53838]">Sign In</a></li>
                 <li><a href="#" className="inline-block py-2 px-6 border border-[#F53838] text-[#F53838] font-medium rounded-full hover:bg-[#F53838] hover:text-white transition-colors">Sign Up</a></li>
               </ul>
@@ -109,7 +118,7 @@ function App() {
       </header>
       <main>
         <section className="hero">
-          <div className="container mx-auto px-4 flex flex-col-reverse md:flex-row items-center gap-8 md:gap-12">
+          <div id="about" className="container mx-auto px-4 flex flex-col-reverse md:flex-row items-center gap-8 md:gap-12">
             <div className="w-full md:w-1/2">
               <h1 className="text-3xl md:text-4xl lg:text-5xl text-[#0B132A] font-normal leading-tight mb-5">
                 Want anything to be easy with <strong className="font-bold">LaslesVPN.</strong>
@@ -164,7 +173,7 @@ function App() {
           </div>
         </section>
         <section className="py-16 md:py-24">
-          <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12 md:gap-16">
+          <div id="features" className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12 md:gap-16">
             <div className="w-full md:w-1/2">
               <img src="./images/Illustration 2.png" alt="Features" className="w-full max-w-lg mx-auto" />
             </div>
@@ -187,7 +196,7 @@ function App() {
           </div>
         </section>
         <section className="py-16 md:py-24 bg-[#FBFBFB]">
-          <div className="container mx-auto px-4">
+          <div id="pricing" className="container mx-auto px-4">
             <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
               <h2 className="text-2xl md:text-3xl lg:text-4xl text-[#0B132A] font-medium leading-tight mb-5">
                 Choose Your Plan
@@ -227,7 +236,7 @@ function App() {
           </div>
         </section>
         <section className="py-12 md:pb-24 bg-[#FBFBFB]">
-          <div className="container mx-auto px-4 py-12 text-center">
+          <div id="testimonials" className="container mx-auto px-4 py-12 text-center">
             <h2 className="text-2xl md:text-3xl lg:text-4xl text-[#0B132A] font-medium leading-tight mb-5 max-w-md mx-auto">
               Trusted by Thousands of Happy Customer
             </h2>
@@ -316,7 +325,7 @@ function App() {
         </section>
       </main>
       <footer className="bg-[#F8F8F8] pt-10 md:pt-48 pb-8">
-        <div className="container mx-auto px-4">
+        <div id="help" className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-12">
             <div className="md:w-1/3 mb-8 md:mb-0">
               <div className="mb-4">
