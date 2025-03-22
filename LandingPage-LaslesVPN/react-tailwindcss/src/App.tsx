@@ -214,7 +214,7 @@ function App() {
                 Provide a network for all your needs with ease and fun using LaslesVPN discover interesting features from us.
               </p>
               <div>
-                <a href="#" className="inline-flex items-center justify-center w-full md:w-60 h-12 md:h-16 bg-[#F53838] text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                <a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('pricing'); }} className="inline-flex items-center justify-center w-full md:w-60 h-12 md:h-16 bg-[#F53838] text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-shadow">
                   Get Started
                 </a>
               </div>
