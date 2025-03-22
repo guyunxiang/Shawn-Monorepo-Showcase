@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 
+// Default Dark Mode
+const DEFAULTMODE = localStorage.getItem('darkMode') === 'true' || false;
+
 function App() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  
+  const [darkMode, setDarkMode] = useState(DEFAULTMODE);
+
   // 初始化主题模式 - 根据 localStorage 或浏览器偏好设置
   useEffect(() => {
     // 优先检查 localStorage
@@ -137,7 +140,7 @@ function App() {
 
             {/* Auth buttons and Dark Mode Toggle */}
             <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
-              <button 
+              <button
                 onClick={toggleDarkMode}
                 className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 transition-colors"
                 aria-label="Toggle dark mode"
@@ -152,14 +155,14 @@ function App() {
                   </svg>
                 )}
               </button>
-              
+
               <a href="#" className="font-medium hover:text-[#F53838] dark:text-white">Sign In</a>
               <a href="#" className="inline-block py-2 px-6 border border-[#F53838] text-[#F53838] font-medium rounded-full hover:bg-[#F53838] hover:text-white transition-colors dark:hover:text-white">Sign Up</a>
             </div>
 
             {/* Mobile menu button and dark mode toggle */}
             <div className="flex items-center space-x-4 md:hidden">
-              <button 
+              <button
                 onClick={toggleDarkMode}
                 className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 transition-colors"
                 aria-label="Toggle dark mode"
@@ -174,7 +177,7 @@ function App() {
                   </svg>
                 )}
               </button>
-              
+
               <button
                 className="text-4xl md:hidden dark:text-white"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -467,8 +470,8 @@ function App() {
       </footer>
 
       {/* Scroll to top button */}
-      <button 
-        onClick={scrollToTop} 
+      <button
+        onClick={scrollToTop}
         className={`fixed cursor-pointer bottom-6 right-6 bg-[#F53838] text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all z-50 ${showScrollTop ? 'opacity-100 scale-100' : 'opacity-0 scale-0'}`}
         aria-label="Scroll to top"
       >
