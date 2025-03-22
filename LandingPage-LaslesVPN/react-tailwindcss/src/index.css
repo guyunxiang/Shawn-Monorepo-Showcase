@@ -18,3 +18,5 @@
   --color-text-paragraph: #4F5665;
   --color-shadow-black: rgba(11, 19, 42, 0.1);
 }
+
+@custom-variant dark (&:where(.dark, .dark *));
