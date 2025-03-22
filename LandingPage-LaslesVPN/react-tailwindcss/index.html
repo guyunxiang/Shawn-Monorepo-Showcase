@@ -10,7 +10,15 @@
     rel="stylesheet">
   <title>LaslesVPN - ReactJS, TailwindCSS</title>
   <link rel="shortcut icon" href="./images/logo-s.png" type="image/x-icon">
-
+  <script>
+    (function () {
+      const savedTheme = localStorage.getItem('darkMode');
+      if (savedTheme === 'true' ||
+        (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
 </head>
 
 <body>
