@@ -6,21 +6,44 @@ function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+
+  const comments = [
+    {
+      name: 'Viezh Robert',
+      icon: './images/Ellipse 175.png',
+      location: 'Warsaw, Poland',
+      rating: 4.5,
+      comment: '"Wow... I am very happy to use this VPN. It turned out to be more than my expectations and so far there has been no problem. LaslesVPN always the best."'
+    },
+    {
+      name: 'Yessica Christy',
+      icon: './images/Ellipse 175 (1).png',
+      location: 'Shanxi, China',
+      rating: 4.5,
+      comment: '"I like it because I like to travel far and still can connect with high speed."'
+    },
+    {
+      name: 'Kim Young Jou',
+      icon: './images/Ellipse 175 (2).png',
+      location: 'Seoul, South Korea',
+      rating: 4.5,
+      comment: '"This is very unusual for my business that currently requires a virtual private network that has high security."'
+    }
+  ];
   
-  // 初始化主题模式 - 根据 localStorage 或浏览器偏好设置
   useEffect(() => {
-    // 优先检查 localStorage
+    // validate local setting
     const savedTheme = localStorage.getItem('darkMode');
     if (savedTheme !== null) {
       setDarkMode(savedTheme === 'true');
     } else {
-      // 检查浏览器偏好设置
+      // check browser config
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setDarkMode(prefersDark);
     }
   }, []);
 
-  // 监听深色模式变化，更新文档和 localStorage
+  // update theme
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
@@ -30,7 +53,7 @@ function App() {
     localStorage.setItem('darkMode', darkMode.toString());
   }, [darkMode]);
 
-  // 切换深色模式
+  // toggle dark mode
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
@@ -329,29 +352,7 @@ function App() {
             </p>
 
             <div className="flex overflow-x-auto pb-6 gap-8 md:gap-10">
-              {[
-                {
-                  name: 'Viezh Robert',
-                  icon: './images/Ellipse 175.png',
-                  location: 'Warsaw, Poland',
-                  rating: 4.5,
-                  comment: '"Wow... I am very happy to use this VPN. It turned out to be more than my expectations and so far there has been no problem. LaslesVPN always the best."'
-                },
-                {
-                  name: 'Yessica Christy',
-                  icon: './images/Ellipse 175 (1).png',
-                  location: 'Shanxi, China',
-                  rating: 4.5,
-                  comment: '"I like it because I like to travel far and still can connect with high speed."'
-                },
-                {
-                  name: 'Kim Young Jou',
-                  icon: './images/Ellipse 175 (2).png',
-                  location: 'Seoul, South Korea',
-                  rating: 4.5,
-                  comment: '"This is very unusual for my business that currently requires a virtual private network that has high security."'
-                }
-              ].map((testimonial, index) => (
+              {comments.map((testimonial, index) => (
                 <div key={index} className="min-w-[300px] sm:min-w-[350px] max-w-[400px] bg-white dark:bg-gray-700 p-6 border border-gray-200 dark:border-gray-600 rounded-lg flex flex-col hover:border-[#F53838] transition-colors">
                   <div className="flex items-center justify-between mb-5">
                     <div className="flex items-center gap-4">
