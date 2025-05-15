@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import tailwindcss from '@tailwindcss/vite'
 import Pages from 'vite-plugin-pages'
+import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -10,7 +11,12 @@ export default defineConfig({
     tailwindcss(),
     Pages({
       dirs: 'src/pages',
-      extensions: ['tsx']
+      extensions: ['tsx'],
     })
   ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src') // alias '@' points to 'src' directory
+    }
+  }
 })
