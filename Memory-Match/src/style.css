@@ -19,3 +19,7 @@ html {
   overflow: hidden;
 }
 
+canvas {
+  cursor: pointer;
+}
+
