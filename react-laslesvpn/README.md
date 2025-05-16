@@ -24,8 +24,8 @@ This project includes two implementations:
 - React Router (for navigation, if needed)
 
 ## Live Preview
-- 🔗 **Static HTML Demo:** [GitHub Pages Link](https://github.com/guyunxiang/shawns-showcase/tree/main/LandingPage-LaslesVPN/static-html)
-- 🔗 **React + Tailwind Demo:** [Vercel Link](https://github.com/guyunxiang/shawns-showcase/tree/main/LandingPage-LaslesVPN/react-tailwind)
+- 🔗 **Static HTML Demo:** [GitHub Pages Link](https://github.com/guyunxiang/Shawn-Monorepo-Showcase/tree/main/static-laslesvpn)
+- 🔗 **React + Tailwind Demo:** [Vercel Link](https://github.com/guyunxiang/Shawn-Monorepo-Showcase/tree/main/react-laslesvpn)
 
 ## Project Structure
 ```
