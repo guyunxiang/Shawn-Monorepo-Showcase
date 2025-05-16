@@ -25,7 +25,6 @@ export default class GameManager {
     this._soundManager = new SoundManager();
 
     this._cardManager = new CardManager(this, difficulty);
-    this._cardManager = new CardManager(this);
     this._inputManager = new InputManager(this, this._canvas.getElement());
     this._uiManager = new UIManager(this, this._renderer);
 
