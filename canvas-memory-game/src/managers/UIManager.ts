@@ -1,5 +1,5 @@
 import GameManager from "./GameManager";
-import Renderer from "./Render";
+import Renderer from "../components/Render";
 
 class UIManager {
   private _gameManager: GameManager;

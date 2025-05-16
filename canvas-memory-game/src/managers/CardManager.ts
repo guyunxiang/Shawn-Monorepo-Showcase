@@ -1,14 +1,16 @@
-import Card from "./Card";
+import Card from "../components/Card";
 import GameManager from "./GameManager";
 
 class CardManager {
+  private _difficulty: 'easy' | 'normal' | 'hard';
   private _gameManager: GameManager;
   private _cards: Card[] = [];
   private _flippedCards: Card[] = [];
   private static _backImage: HTMLImageElement;
 
-  constructor(_gameManager: GameManager) {
+  constructor(_gameManager: GameManager, difficulty: 'easy' | 'normal' | 'hard') {
     this._gameManager = _gameManager;
+    this._difficulty = difficulty;
   }
 
   loadAssets(onLoaded: () => void): void {
@@ -20,13 +22,23 @@ class CardManager {
     };
   }
 
+  private getGridSize(): { rows: number; cols: number } {
+    switch (this._difficulty) {
+      case 'easy':
+        return { rows: 2, cols: 4 };  // 8 cards
+      case 'hard':
+        return { rows: 4, cols: 5 };  // 20 cards
+      default:
+        return { rows: 3, cols: 4 };  // 12 cards
+    }
+  }
+
   private layoutCards(): void {
     const canvas = this._gameManager.getCanvas();
     const canvasWidth = canvas.getWidth();
     const canvasHeight = canvas.getHeight();
 
-    const cols = 4;
-    const rows = 3;
+    const { rows, cols } = this.getGridSize();
     const paddingTop = 80;
 
     const availableWidth = canvasWidth;
@@ -62,25 +74,31 @@ class CardManager {
   }
 
   generateCards(): void {
-    const EMOJIS = ['😄', '😢', '😠', '😱', '😯', '😌'];
-    const pairs = [...EMOJIS, ...EMOJIS];
-    const shuffled = this.shuffleArray(pairs);
+    const { rows, cols } = this.getGridSize();
+    const totalCards = rows * cols;
+    const numPairs = totalCards / 2;
+
+    const EMOJIS = ['😄', '😢', '😠', '😱', '😯', '😌', '😇', '🤓', '🤑', '🤠', '👻', '💀', '👽', '🤖', '🎃'];
+    const selected = EMOJIS.slice(0, numPairs);
+    const pairs = this.shuffleArray([...selected, ...selected]); // double for pairing
 
     this._cards = [];
     this._flippedCards = [];
 
-    for (let i = 0; i < shuffled.length; i++) {
+    for (let i = 0; i < pairs.length; i++) {
+      // placeholder positions and sizes, will be set in layoutCards()
       const card = new Card(
-        0, 0, 0, 0,                                 // placeholder, will set later
-        shuffled[i],
+        0, 0, 0, 0,
+        pairs[i],
         this._gameManager.getRenderer(),
         CardManager._backImage
       );
       this._cards.push(card);
     }
 
-    this.layoutCards();                             // apply layout after card list is ready
+    this.layoutCards(); // layout after cards created
   }
+
 
   public resizeAndLayout(): void {
     this.layoutCards();              // just recalculate positions & sizes

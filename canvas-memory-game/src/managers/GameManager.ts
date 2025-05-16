@@ -1,11 +1,12 @@
-import BGMController from "./BGMController";
-import Canvas from "./Canvas";
+import BGMController from "../audio/BGMController";
+import Canvas from "../canvas/Canvas";
 import CardManager from "./CardManager";
 import InputManager from "./InputManager";
-import Renderer from "./Render";
+import Renderer from "../components/Render";
 import SoundManager from "./SoundManager";
 import UIManager from "./UIManager";
 
+type Difficulty = 'easy' | 'normal' | 'hard';
 export default class GameManager {
   private _canvas: Canvas;
   private _renderer: Renderer;
@@ -18,11 +19,12 @@ export default class GameManager {
   private _bestSteps: number = Infinity;
   private _isGameOver: boolean = false;
 
-  constructor() {
+  constructor(difficulty: Difficulty = 'normal') {
     this._canvas = new Canvas(() => this.resize());
     this._renderer = new Renderer(this._canvas.getContext());
     this._soundManager = new SoundManager();
-    this._cardManager = new CardManager(this);
+
+    this._cardManager = new CardManager(this, difficulty);
     this._uiManager = new UIManager(this, this._renderer);
     new InputManager(this, this._canvas.getElement());
 

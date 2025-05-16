@@ -1,4 +1,4 @@
-import SoundManager from "./SoundManager";
+import SoundManager from "../managers/SoundManager";
 
 class BGMController {
   private _sound: SoundManager;
