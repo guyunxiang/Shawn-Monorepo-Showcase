@@ -1,8 +1,8 @@
-import BGMController from "./BGMController";
-import Canvas from "./Canvas";
+import BGMController from "../audio/BGMController";
+import Canvas from "../canvas/Canvas";
 import CardManager from "./CardManager";
 import InputManager from "./InputManager";
-import Renderer from "./Render";
+import Renderer from "../components/Render";
 import SoundManager from "./SoundManager";
 import UIManager from "./UIManager";
 

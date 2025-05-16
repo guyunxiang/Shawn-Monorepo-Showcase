@@ -1,5 +1,5 @@
-import Button from "../Button";
-import Renderer from "../Render";
+import Button from "../components/Button";
+import Renderer from "../components/Render";
 
 type Difficulty = 'easy' | 'normal' | 'hard';
 

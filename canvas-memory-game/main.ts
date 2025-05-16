@@ -1,7 +1,7 @@
-import Canvas from './src/Canvas';
-import Renderer from './src/Render';
-import StartScreen from './src/home/StartScreen';
-import GameManager from './src/GameManager';
+import Canvas from './src/canvas/Canvas';
+import Renderer from './src/components/Render';
+import StartScreen from './src/scenes/StartScreen';
+import GameManager from './src/managers/GameManager';
 
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = new Canvas();
