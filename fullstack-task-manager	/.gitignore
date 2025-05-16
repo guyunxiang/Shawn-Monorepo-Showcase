@@ -1,8 +1,0 @@
-.glitchdotcom.json
-.node-gyp
-node_modules
-.cache
-.config
-
-.env
-.bash_history
