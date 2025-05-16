@@ -3,9 +3,12 @@ import { generateCards } from './game';
 import { Card } from './card';
 
 import { SoundManager } from './audio';
+import { BGMController } from './bgmController';
 
 const sound = new SoundManager();
-sound.playBackground();
+const bgmController = new BGMController(sound);
+
+bgmController.enableAutoStart(canvas);
 
 resizeCanvas();
 Card.loadAssets(() => {
