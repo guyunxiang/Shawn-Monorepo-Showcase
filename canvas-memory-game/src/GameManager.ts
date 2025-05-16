@@ -10,7 +10,7 @@ export default class GameManager {
   private _canvas: Canvas;
   private _renderer: Renderer;
   private _cardManager: CardManager;
-  private _inputManager: InputManager;
+  // private _inputManager: InputManager;
   private _uiManager: UIManager;
   private _soundManager: SoundManager;
 
@@ -23,8 +23,8 @@ export default class GameManager {
     this._renderer = new Renderer(this._canvas.getContext());
     this._soundManager = new SoundManager();
     this._cardManager = new CardManager(this);
-    this._inputManager = new InputManager(this, this._canvas.getElement());
     this._uiManager = new UIManager(this, this._renderer);
+    new InputManager(this, this._canvas.getElement());
 
     this.init();
   }

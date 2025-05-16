@@ -37,7 +37,7 @@ class SoundManager {
   }
 
   playBackground(): void {
-    this._bgMusic.play().catch(e => {
+    this._bgMusic.play().catch(_ => {
       console.warn('autoplay blocked');
     });
   }
