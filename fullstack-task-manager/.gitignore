@@ -1,5 +1,16 @@
+<<<<<<< HEAD
 .cache
 .config
 .bash_history
 .glitchdotcom.json
 .node-gyp
+=======
+.glitchdotcom.json
+.node-gyp
+node_modules
+.cache
+.config
+
+.env
+.bash_history
+>>>>>>> main
