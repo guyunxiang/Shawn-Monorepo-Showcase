@@ -2,6 +2,11 @@ import { resizeCanvas, ctx, canvas } from './canvas';
 import { generateCards } from './game';
 import { Card } from './card';
 
+import { SoundManager } from './audio';
+
+const sound = new SoundManager();
+sound.playBackground();
+
 resizeCanvas();
 Card.loadAssets(() => {
   resetGame(); // only start game after image is ready
@@ -98,6 +103,8 @@ canvas.addEventListener('click', (event: MouseEvent) => {
   const clickX = event.clientX - rect.left;
   const clickY = event.clientY - rect.top;
 
+  sound.playFlip();
+
   if (isGameOver) {
     const { x, y, width, height } = restartButtonRect;
     const within = (
@@ -143,6 +150,7 @@ function checkGameOver() {
 
   if (allMatched) {
     isGameOver = true;
+    sound.playVictory();
     saveBestSteps(steps);
     setTimeout(() => {
       drawGameOver();
@@ -164,10 +172,12 @@ function checkMatch() {
   steps++;
 
   if (card1.label === card2.label) {
+    sound.playMatch();
     flippedCards = [];
     drawAll();
     checkGameOver();
   } else {
+    sound.playFail();
     // disable interaction during animation
     setTimeout(() => {
       // use animateFlip to flip back
