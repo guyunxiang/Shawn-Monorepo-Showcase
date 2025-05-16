@@ -6,7 +6,6 @@ export default function Header() {
 
   const theme = useTheme();
   const darkMode = theme === 'dark';
-  console.log(darkMode)
   const toggleTheme = useToggleTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
