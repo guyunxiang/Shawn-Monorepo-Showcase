@@ -3,8 +3,12 @@ import { generateCards } from './game';
 import { Card } from './card';
 
 resizeCanvas();
+Card.loadAssets(() => {
+  resetGame(); // only start game after image is ready
+});
+let cards = generateCards();
 
-let cards: Card[] = [];
+// let cards: Card[] = [];
 let flippedCards: Card[] = [];
 let steps = 0;
 let bestSteps = loadBestSteps();
@@ -153,8 +157,6 @@ function resetGame() {
   isGameOver = false;
   drawAll();
 }
-
-resetGame();
 
 function checkMatch() {
   const [card1, card2] = flippedCards;
