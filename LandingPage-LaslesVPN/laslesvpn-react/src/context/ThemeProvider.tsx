@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { ThemeContext, ThemeUpdateContext } from './ThemeContext'
 import type { ReactNode } from 'react'
 
-const localTheme = localStorage.getItem('theme') === 'light' ? 'light' : 'dark';
+const localTheme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 

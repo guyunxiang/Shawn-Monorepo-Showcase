@@ -1,6 +1,6 @@
-import { useTheme, useToggleTheme } from '@/context/useTheme';
+import { useTheme, useToggleTheme } from '@/hooks/useTheme';
 import { useState } from 'react';
-// import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 export default function Header() {
 
@@ -56,8 +56,8 @@ export default function Header() {
               )}
             </button>
 
-            <a href="#" className="font-medium hover:text-[#F53838] dark:text-white">Sign In</a>
-            <a href="#" className="inline-block py-2 px-6 border border-[#F53838] text-[#F53838] font-medium rounded-full hover:bg-[#F53838] hover:text-white transition-colors dark:hover:text-white">Sign Up</a>
+            <Link to="/login" className="font-medium hover:text-[#F53838] dark:text-white">Sign In</Link>
+            <Link to="/register" className="inline-block py-2 px-6 border border-[#F53838] text-[#F53838] font-medium rounded-full hover:bg-[#F53838] hover:text-white transition-colors dark:hover:text-white">Sign Up</Link>
           </div>
 
           {/* Mobile menu button and dark mode toggle */}
