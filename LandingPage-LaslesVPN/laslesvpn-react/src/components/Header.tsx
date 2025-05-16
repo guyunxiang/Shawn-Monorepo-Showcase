@@ -1,4 +1,4 @@
-import { useTheme, useToggleTheme } from '@/context/useTheme';
+import { useTheme, useToggleTheme } from '@/hooks/useTheme';
 import { useState } from 'react';
 // import { Link } from 'react-router-dom'
 
