@@ -117,7 +117,7 @@ function HomePage() {
             </div>
           </div>
         </section>
-        <section className="py-16 md:py-24 dark:bg-gray-900 transition-colors duration-300">
+        <section className="py-8 md:py-8 dark:bg-gray-900 transition-colors duration-300">
           <div id="features" className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12 md:gap-16">
             <div className="w-full md:w-1/2">
               <img src="./images/Illustration 2.png" alt="Features" className="w-full max-w-lg mx-auto" />
