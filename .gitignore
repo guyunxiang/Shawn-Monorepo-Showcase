@@ -1,0 +1,42 @@
+# node modules
+**/node_modules/
+
+# build outputs
+**/dist/
+**/build/
+
+# system files
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE configs
+.vscode/
+.idea/
+
+# environment files
+**/.env
+**/.env.local
+**/.env.development
+**/.env.production
+**/.env.test
+
+# TypeScript
+**/*.tsbuildinfo
+
+# coverage
+**/coverage/
+
+# next.js / nuxt.js
+.next/
+.nuxt/
+out/
+
+# misc
+*.swp
