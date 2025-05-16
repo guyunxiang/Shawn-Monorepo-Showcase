@@ -1,54 +1,71 @@
-# React + TypeScript + Vite
+# LandingPage-LaslesVPN
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Introduction
+This project is a web implementation of the **LaslesVPN Landing Page** based on a Figma design. The goal is to demonstrate the ability to convert a design file into a pixel-perfect, responsive webpage using both a **static HTML/CSS approach** and a **React + Tailwind CSS solution**.
 
-Currently, two official plugins are available:
+## Design Source
+- The original design file was downloaded from the **Figma Community**.
+- 🎨 [Figma Design Link](https://www.figma.com/community/file/858999227165747995)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
+This project includes two implementations:
 
-## Expanding the ESLint configuration
+### **1. Static HTML/CSS Solution**
+- HTML5
+- CSS3 (Flexbox & Grid)
+- CSS Variables
+- CSSComb (for formatting)
+- Responsive Design
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### **2. React + Tailwind CSS Solution**
+- React.js
+- Tailwind CSS
+- Vite (for fast development)
+- React Router (for navigation, if needed)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Live Preview
+- 🔗 **Static HTML Demo:** [GitHub Pages Link](https://github.com/guyunxiang/shawns-showcase/tree/main/LandingPage-LaslesVPN/static-html)
+- 🔗 **React + Tailwind Demo:** [Vercel Link](https://github.com/guyunxiang/shawns-showcase/tree/main/LandingPage-LaslesVPN/react-tailwind)
+
+## Project Structure
+```
+/LandingPage-LaslesVPN
+├── design/             # Figma design file
+├── assets/             # Images, fonts, icons
+├── static-html/        # Static HTML solution folder
+├── react-tailwind/     # React + Tailwind solution folder
+├── README.md           # Project documentation
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Key Features
+✅ **Pixel-perfect conversion** from Figma to HTML/CSS/React  
+✅ **Fully responsive** across desktop, tablet, and mobile devices  
+✅ **Optimized performance** (lazy loading, minified CSS, optimized assets)  
+✅ **Two solutions available:** Pure HTML/CSS and React + Tailwind CSS  
+✅ **Consistent UI** using CSS variables and Tailwind utilities  
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+## How to Run Locally
+### **Static HTML Version**
+```sh
+git clone https://github.com/guyunxiang/shawns-showcase.git
+cd LandingPage-LaslesVPN/static-html
+open index.html
 ```
+
+### **React + Tailwind Version**
+```sh
+git clone https://github.com/guyunxiang/shawns-showcase.git
+cd LandingPage-LaslesVPN/react-tailwind
+npm install
+npm run dev
+```
+
+## Future Improvements
+- Add animations and interactions
+- Improve accessibility (ARIA roles, keyboard navigation)
+- Integrate API for dynamic content
+- Convert static version into a Next.js project
+
+## License
+This project is open-source under the MIT License. The Figma design is a free resource from the Figma Community, and its usage should comply with Figma’s licensing terms.
+
