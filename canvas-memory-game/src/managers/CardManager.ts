@@ -1,14 +1,15 @@
 import Card from "../components/Card";
 import GameManager from "./GameManager";
+import type { Difficulty } from "../types/types";
 
 class CardManager {
-  private _difficulty: 'easy' | 'normal' | 'hard';
+  private _difficulty: Difficulty;
   private _gameManager: GameManager;
   private _cards: Card[] = [];
   private _flippedCards: Card[] = [];
   private static _backImage: HTMLImageElement;
 
-  constructor(_gameManager: GameManager, difficulty: 'easy' | 'normal' | 'hard') {
+  constructor(_gameManager: GameManager, difficulty: Difficulty) {
     this._gameManager = _gameManager;
     this._difficulty = difficulty;
   }

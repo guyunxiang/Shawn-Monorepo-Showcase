@@ -4,8 +4,7 @@ import InputManager from "./InputManager";
 import Renderer from "../components/Render";
 import SoundManager from "./SoundManager";
 import UIManager from "./UIManager";
-
-type Difficulty = 'easy' | 'normal' | 'hard';
+import type { Difficulty } from "../types/types";
 export default class GameManager {
   private _canvas: Canvas;
   private _renderer: Renderer;
