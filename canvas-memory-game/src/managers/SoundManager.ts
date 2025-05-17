@@ -1,9 +1,11 @@
+import BGMController from "../audio/BGMController";
 class SoundManager {
   private _bgMusic: HTMLAudioElement;
   private _flipSound: HTMLAudioElement;
   private _matchSound: HTMLAudioElement;
   private _failSound: HTMLAudioElement;
   private _victorySound: HTMLAudioElement;
+  private _bgm: BGMController;
 
   constructor() {
     this._bgMusic = new Audio('/assets/audio/bg-music.mp3');
@@ -14,6 +16,16 @@ class SoundManager {
     this._matchSound = new Audio('/assets/audio/match.mp3');
     this._failSound = new Audio('/assets/audio/fail.mp3');
     this._victorySound = new Audio('/assets/audio/victory.mp3');
+
+    this._bgm = new BGMController(this);
+  }
+
+  enableAutoBGM(canvas: HTMLCanvasElement): void {
+    this._bgm.enableAutoStart(canvas);
+  }
+
+  public tryPlayBGM(): void {
+    this._bgm.tryPlay();
   }
 
   playFlip(): void {
