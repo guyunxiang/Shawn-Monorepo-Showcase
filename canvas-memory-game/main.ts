@@ -10,5 +10,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const startScreen = new StartScreen(canvas.getElement(), renderer, (difficulty) => {
     new GameManager(difficulty);
-  });
+  }, 'animals');
 });

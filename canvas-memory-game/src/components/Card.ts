@@ -5,7 +5,7 @@ class Card {
   private _y: number;
   private _width: number;
   private _height: number;
-  private _label: string;
+  private _label: string | HTMLImageElement;
   private _flipped: boolean;
   private _isAnimating: boolean = false;
   private _scaleX: number = 1;
@@ -17,7 +17,7 @@ class Card {
     y: number,
     width: number,
     height: number,
-    label: string,
+    label: string | HTMLImageElement,
     renderer: Renderer,
     backImage: HTMLImageElement
   ) {
@@ -50,11 +50,17 @@ class Card {
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, this._width, this._height);
 
-      ctx.fillStyle = '#000';
-      ctx.font = '28px serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(this._label, this._width / 2, this._height / 2);
+      if (this._label instanceof HTMLImageElement) {
+        // Draw image content
+        this.drawImageContent(ctx);
+      } else {
+        // Draw text/emoji content (fallback)
+        ctx.fillStyle = '#000';
+        ctx.font = '28px serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(this._label, this._width / 2, this._height / 2);
+      }
     } else {
       if (this._backImage?.complete) {
         ctx.drawImage(this._backImage, 0, 0, this._width, this._height);
@@ -68,6 +74,52 @@ class Card {
     }
 
     ctx.restore();
+  }
+
+  private drawImageContent(ctx: CanvasRenderingContext2D): void {
+    if (!(this._label instanceof HTMLImageElement)) return;
+
+    const image = this._label;
+    const padding = 15; // Padding around the image
+
+    // Available space for the image
+    const availWidth = this._width - (padding * 2);
+    const availHeight = this._height - (padding * 2);
+
+    // Original image aspect ratio
+    const imgRatio = image.width / image.height;
+
+    // Calculate dimensions while maintaining aspect ratio
+    let drawWidth, drawHeight;
+
+    if (imgRatio > 1) {
+      // Landscape image
+      drawWidth = availWidth;
+      drawHeight = drawWidth / imgRatio;
+
+      // If height is still too large, scale down
+      if (drawHeight > availHeight) {
+        drawHeight = availHeight;
+        drawWidth = drawHeight * imgRatio;
+      }
+    } else {
+      // Portrait image
+      drawHeight = availHeight;
+      drawWidth = drawHeight * imgRatio;
+
+      // If width is still too large, scale down
+      if (drawWidth > availWidth) {
+        drawWidth = availWidth;
+        drawHeight = drawWidth / imgRatio;
+      }
+    }
+
+    // Calculate position to center the image
+    const xPos = (this._width - drawWidth) / 2;
+    const yPos = (this._height - drawHeight) / 2;
+
+    // Draw the image
+    ctx.drawImage(image, xPos, yPos, drawWidth, drawHeight);
   }
 
   // Getters and setters
@@ -87,11 +139,11 @@ class Card {
     return this._height;
   }
 
-  getLabel(): string {
+  getLabel(): string | HTMLImageElement {
     return this._label;
   }
 
-  public setLabel(label: string): void {
+  setLabel(label: string | HTMLImageElement): void {
     this._label = label;
   }
 
@@ -128,7 +180,6 @@ class Card {
     this._width = width;
     this._height = height;
   }
-
 }
 
 export default Card;
