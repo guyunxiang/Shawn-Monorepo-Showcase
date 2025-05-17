@@ -64,7 +64,7 @@ class StartScreen {
   private layout(): void {
     // re-layout preview card
     const w = this._previewCard.getWidth();
-    const h = this._previewCard.getHeight();
+    // const h = this._previewCard.getHeight();
     const x = (this._canvas.width - w) / 2;
     const y = this._canvas.height * 0.25;
     this._previewCard.setPosition(x, y);
