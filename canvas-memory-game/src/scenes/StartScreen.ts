@@ -1,9 +1,11 @@
+import type { Difficulty } from "../types/types";
+
 import Button from "../components/Button";
 import Renderer from "../components/Render";
 import SoundManager from "../managers/SoundManager";
 import Card from "../components/Card";
 import WindowManager from "../managers/WindowManager";
-import type { Difficulty } from "../types/types";
+import { animateCardFlip } from "../utils/animations";
 
 class StartScreen {
   private _canvas: HTMLCanvasElement;
@@ -126,11 +128,16 @@ class StartScreen {
       y <= this._previewCard.getY() + this._previewCard.getHeight()
     ) {
       this._soundManager.playFlip();
-      this.animateFlip(this._previewCard, () => {
-        this._emojiIndex = (this._emojiIndex + 1) % this._emojis.length;
-        this._previewCard.setLabel(this._emojis[this._emojiIndex]);
-        this._previewCard.setFlipped(true);
-      });
+      animateCardFlip(
+        this._previewCard,
+        () => {
+          this._emojiIndex = (this._emojiIndex + 1) % this._emojis.length;
+          this._previewCard.setLabel(this._emojis[this._emojiIndex]);
+          this._previewCard.setFlipped(true);
+        },
+        () => this.draw(),       // draw at the end
+        () => this.draw()        // draw every frame
+      );
       return;
     }
 
@@ -165,36 +172,6 @@ class StartScreen {
     this._activeButton = null;
     this.draw();
   };
-
-  // flip animation for the preview card
-  private animateFlip(card: Card, onHalfFlip: () => void, onDone?: () => void): void {
-    card.startAnimation();
-    let progress = 0;
-    let direction = -1;
-
-    const animate = () => {
-      progress += 0.1;
-      card.setScaleX(Math.cos(progress));
-
-      if (progress >= Math.PI / 2 && direction === -1) {
-        onHalfFlip();
-        direction = 1;
-      }
-
-      if (progress >= Math.PI) {
-        card.setScaleX(1);
-        card.stopAnimation();
-        this.draw();
-        if (onDone) onDone();
-        return;
-      }
-
-      this.draw();
-      requestAnimationFrame(animate);
-    };
-
-    animate();
-  }
 
   // redraw all UI
   public draw(): void {
