@@ -15,7 +15,7 @@ export function animateCardFlip(
 
   const animate = () => {
     progress += 0.1;
-    card.setScaleX(Math.cos(progress));
+    card.setScaleX(Math.abs(Math.cos(progress)));
 
     if (progress >= Math.PI / 2 && direction === -1) {
       onHalfFlip();

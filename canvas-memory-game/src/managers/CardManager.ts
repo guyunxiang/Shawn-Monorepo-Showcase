@@ -3,6 +3,8 @@ import type { Difficulty } from "../types/types";
 import Card from "../components/Card";
 import GameManager from "./GameManager";
 import { animateCardFlip } from "../utils/animations";
+import { loadThemeImages } from "../utils/themeLoader";
+
 
 class CardManager {
   private _difficulty: Difficulty;
@@ -10,19 +12,49 @@ class CardManager {
   private _cards: Card[] = [];
   private _flippedCards: Card[] = [];
   private static _backImage: HTMLImageElement;
+  private _imageCache: Map<string, HTMLImageElement> = new Map();
+  private _themeImages: HTMLImageElement[] = [];
+  private _theme: string = 'animals';
 
   constructor(_gameManager: GameManager, difficulty: Difficulty) {
     this._gameManager = _gameManager;
     this._difficulty = difficulty;
   }
 
-  loadAssets(onLoaded: () => void): void {
-    const img = new Image();
-    img.src = '/assets/card-back.png';
-    img.onload = () => {
-      CardManager._backImage = img;
+  async loadAssets(onLoaded: () => void): Promise<void> {
+    try {
+      if (!CardManager._backImage) {
+        const backImgPromise = new Promise<void>((resolve) => {
+          const img = new Image();
+          img.src = `/assets/${this._theme}/card-back.jpg`;
+          img.onload = () => {
+            CardManager._backImage = img;
+            resolve();
+          };
+          img.onerror = () => {
+            console.error("Failed to load card back image");
+            resolve();
+          };
+        });
+
+        const themeConfigPromise = this.loadThemeConfig();
+        await Promise.all([backImgPromise, themeConfigPromise]);
+      }
+
       onLoaded();
-    };
+    } catch (error) {
+      console.error("Error loading assets:", error);
+      onLoaded();
+    }
+  }
+
+  private async loadThemeConfig(): Promise<void> {
+    try {
+      this._themeImages = await loadThemeImages(this._theme);
+    } catch (error) {
+      console.error("Error loading theme:", error);
+      this._themeImages = [];
+    }
   }
 
   private getGridSize(): { rows: number; cols: number } {
@@ -81,32 +113,38 @@ class CardManager {
     const totalCards = rows * cols;
     const numPairs = totalCards / 2;
 
-    const EMOJIS = ['😄', '😢', '😠', '😱', '😯', '😌', '😇', '🤓', '🤑', '🤠', '👻', '💀', '👽', '🤖', '🎃'];
-    const selected = EMOJIS.slice(0, numPairs);
-    const pairs = this.shuffleArray([...selected, ...selected]); // double for pairing
+    let cardContents: Array<string | HTMLImageElement> = [];
+
+    if (this._themeImages.length >= numPairs) {
+      const selectedImages = this._themeImages.slice(0, numPairs);
+      cardContents = [...selectedImages, ...selectedImages];
+    } else {
+      const EMOJIS = ['😄', '😢', '😠', '😱', '😯', '😌', '😇', '🤓', '🤑', '🤠', '👻', '💀', '👽', '🤖', '🎃'];
+      const selected = EMOJIS.slice(0, numPairs);
+      cardContents = [...selected, ...selected];
+    }
+
+    cardContents = this.shuffleArray(cardContents);
 
     this._cards = [];
     this._flippedCards = [];
 
-    for (let i = 0; i < pairs.length; i++) {
-      // placeholder positions and sizes, will be set in layoutCards()
+    for (let i = 0; i < cardContents.length; i++) {
       const card = new Card(
         0, 0, 0, 0,
-        pairs[i],
+        cardContents[i],
         this._gameManager.getRenderer(),
         CardManager._backImage
       );
       this._cards.push(card);
     }
 
-    this.layoutCards(); // layout after cards created
+    this.layoutCards();
   }
-
 
   public resizeAndLayout(): void {
-    this.layoutCards();              // just recalculate positions & sizes
+    this.layoutCards();
   }
-
 
   drawCards(): void {
     this._cards.forEach(card => card.draw());
@@ -115,7 +153,7 @@ class CardManager {
   handleCardClick(x: number, y: number): void {
     const soundManager = this._gameManager.getSoundManager();
 
-    if (this._flippedCards.length >= 2) return; // block if already 2 flipped
+    if (this._flippedCards.length >= 2) return;
 
     for (let card of this._cards) {
       if (
@@ -123,7 +161,8 @@ class CardManager {
         x <= card.getX() + card.getWidth() &&
         y >= card.getY() &&
         y <= card.getY() + card.getHeight() &&
-        !card.isFlipped()
+        !card.isFlipped() &&
+        !card.isAnimating()
       ) {
         soundManager.playFlip();
 
@@ -151,14 +190,21 @@ class CardManager {
 
     this._gameManager.incrementSteps();
 
-    if (card1.getLabel() === card2.getLabel()) {
+    const label1 = card1.getLabel();
+    const label2 = card2.getLabel();
+
+    const isMatch =
+      (typeof label1 === 'string' && typeof label2 === 'string' && label1 === label2) ||
+      (label1 instanceof HTMLImageElement && label2 instanceof HTMLImageElement &&
+        label1.src === label2.src);
+
+    if (isMatch) {
       soundManager.playMatch();
       this._flippedCards = [];
       this._gameManager.draw();
       this._gameManager.checkGameOver();
     } else {
       soundManager.playFail();
-      // disable interaction during animation
       setTimeout(() => {
         animateCardFlip(
           card1,
@@ -188,7 +234,12 @@ class CardManager {
     return this._cards;
   }
 
-  // helper function: Fisher-Yates shuffle
+  setTheme(theme: string): void {
+    this._theme = theme;
+    this._imageCache.clear();
+    this._themeImages = [];
+  }
+
   private shuffleArray<T>(arr: T[]): T[] {
     const array = [...arr];
     for (let i = array.length - 1; i > 0; i--) {

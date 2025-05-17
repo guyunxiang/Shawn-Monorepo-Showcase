@@ -5,6 +5,7 @@ import Renderer from "../components/Render";
 import SoundManager from "./SoundManager";
 import UIManager from "./UIManager";
 import type { Difficulty } from "../types/types";
+
 export default class GameManager {
   private _canvas: Canvas;
   private _renderer: Renderer;
@@ -16,13 +17,16 @@ export default class GameManager {
   private _steps: number = 0;
   private _bestSteps: number = Infinity;
   private _isGameOver: boolean = false;
+  private _theme: string = 'animals';
 
-  constructor(difficulty: Difficulty = 'normal') {
+  constructor(difficulty: Difficulty = 'normal', theme: string = 'animals') {
     this._canvas = new Canvas(() => this.resize());
     this._renderer = new Renderer(this._canvas.getContext());
     this._soundManager = new SoundManager();
+    this._theme = theme;
 
     this._cardManager = new CardManager(this, difficulty);
+    this._cardManager.setTheme(this._theme);
     this._uiManager = new UIManager(this, this._renderer);
     new InputManager(this, this._canvas.getElement());
 
@@ -83,6 +87,21 @@ export default class GameManager {
       this._bestSteps = _steps;
       localStorage.setItem('_bestSteps', _steps.toString());
     }
+  }
+
+  setTheme(theme: string): void {
+    if (theme === this._theme) return;
+
+    this._theme = theme;
+    this._cardManager.setTheme(theme);
+
+    this._cardManager.loadAssets(() => {
+      this.startGame();
+    });
+  }
+
+  getTheme(): string {
+    return this._theme;
   }
 
   // Getters
