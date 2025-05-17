@@ -43,7 +43,7 @@ class Button {
 
     // draw button text
     ctx.fillStyle = '#000';
-    ctx.font = 'bold 18px sans-serif';
+    ctx.font = 'bold 18px Gloria Hallelujah';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(this._text, this._x + this._width / 2, y + this._height / 2);

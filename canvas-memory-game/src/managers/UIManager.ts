@@ -57,14 +57,14 @@ class UIManager {
 
     // draw Steps in center
     ctx.fillStyle = '#000';
-    ctx.font = '28px bold sans-serif';
+    ctx.font = '48px Gloria Hallelujah';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
     ctx.fillText(`Steps: ${steps}`, canvasWidth / 2, 20);
 
     // draw Best on right
     ctx.textAlign = 'right';
-    ctx.font = '20px sans-serif';
+    ctx.font = '20px Gloria Hallelujah';
     ctx.fillText(`Best: ${isFinite(bestSteps) ? bestSteps : '-'}`, canvasWidth - 20, 26);
   }
 
@@ -78,7 +78,7 @@ class UIManager {
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
     ctx.fillStyle = '#fff';
-    ctx.font = '48px serif';
+    ctx.font = '48px Gloria Hallelujah';
     ctx.textAlign = 'center';
     ctx.fillText(`🎉 Victory! You finished in ${steps} steps`, canvasWidth / 2, canvasHeight * 0.4);
 
