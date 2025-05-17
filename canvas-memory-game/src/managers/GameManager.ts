@@ -1,12 +1,10 @@
-import BGMController from "../audio/BGMController";
 import Canvas from "../canvas/Canvas";
 import CardManager from "./CardManager";
 import InputManager from "./InputManager";
 import Renderer from "../components/Render";
 import SoundManager from "./SoundManager";
 import UIManager from "./UIManager";
-
-type Difficulty = 'easy' | 'normal' | 'hard';
+import type { Difficulty } from "../types/types";
 export default class GameManager {
   private _canvas: Canvas;
   private _renderer: Renderer;
@@ -33,7 +31,6 @@ export default class GameManager {
 
   init(): void {
     this.loadBestSteps();
-    this.initSounds();
     this._canvas.resize();
     this._cardManager.loadAssets(() => {
       this.startGame();
@@ -119,10 +116,5 @@ export default class GameManager {
 
   isGameFinished(): boolean {
     return this._isGameOver;
-  }
-
-  private initSounds(): void {
-    const bgmController = new BGMController(this._soundManager);
-    bgmController.enableAutoStart(this._canvas.getElement());
   }
 }

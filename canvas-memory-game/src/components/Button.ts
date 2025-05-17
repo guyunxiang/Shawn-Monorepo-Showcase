@@ -17,21 +17,40 @@ class Button {
     this._renderer = renderer;
   }
 
-  draw(): void {
+  draw(isActive: boolean = false): void {
     const ctx = this._renderer.getContext();
 
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(this._x, this._y, this._width, this._height);
+    ctx.save();
+    ctx.beginPath();
 
-    ctx.strokeStyle = '#000000';
-    ctx.strokeRect(this._x, this._y, this._width, this._height);
+    // adjust vertical position if pressed
+    const offsetY = isActive ? 2 : 0;
+    const y = this._y + offsetY;
 
-    ctx.fillStyle = '#000000';
-    ctx.font = '24px Arial';
+    // deeper color for pressed state
+    const gradient = ctx.createLinearGradient(this._x, y, this._x, y + this._height);
+    if (isActive) {
+      gradient.addColorStop(0, '#fbc02d');
+      gradient.addColorStop(1, '#f9a825');
+    } else {
+      gradient.addColorStop(0, '#fff59d');
+      gradient.addColorStop(1, '#fbc02d');
+    }
+
+    this._renderer.drawRoundedRect(this._x, y, this._width, this._height, 10);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    // draw button text
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 18px sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(this._text, this._x + this._width / 2, this._y + this._height / 2);
+    ctx.fillText(this._text, this._x + this._width / 2, y + this._height / 2);
+
+    ctx.restore();
   }
+
 
   isClicked(clickX: number, clickY: number): boolean {
     return (

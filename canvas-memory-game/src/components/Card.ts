@@ -91,6 +91,10 @@ class Card {
     return this._label;
   }
 
+  public setLabel(label: string): void {
+    this._label = label;
+  }
+
   isFlipped(): boolean {
     return this._flipped;
   }

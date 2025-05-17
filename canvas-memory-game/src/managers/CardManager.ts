@@ -1,14 +1,17 @@
+import type { Difficulty } from "../types/types";
+
 import Card from "../components/Card";
 import GameManager from "./GameManager";
+import { animateCardFlip } from "../utils/animations";
 
 class CardManager {
-  private _difficulty: 'easy' | 'normal' | 'hard';
+  private _difficulty: Difficulty;
   private _gameManager: GameManager;
   private _cards: Card[] = [];
   private _flippedCards: Card[] = [];
   private static _backImage: HTMLImageElement;
 
-  constructor(_gameManager: GameManager, difficulty: 'easy' | 'normal' | 'hard') {
+  constructor(_gameManager: GameManager, difficulty: Difficulty) {
     this._gameManager = _gameManager;
     this._difficulty = difficulty;
   }
@@ -124,14 +127,18 @@ class CardManager {
       ) {
         soundManager.playFlip();
 
-        this.animateFlip(card, () => {
-          card.setFlipped(true);
-          this._flippedCards.push(card);
-
-          if (this._flippedCards.length === 2) {
-            this.checkMatch();
-          }
-        });
+        animateCardFlip(
+          card,
+          () => {
+            card.setFlipped(true);
+            this._flippedCards.push(card);
+            if (this._flippedCards.length === 2) {
+              this.checkMatch();
+            }
+          },
+          undefined,
+          () => this._gameManager.draw()
+        );
 
         break;
       }
@@ -153,45 +160,24 @@ class CardManager {
       soundManager.playFail();
       // disable interaction during animation
       setTimeout(() => {
-        // use animateFlip to flip back
-        this.animateFlip(card1, () => card1.setFlipped(false));
-        this.animateFlip(card2, () => card2.setFlipped(false), () => {
-          this._flippedCards = [];
-          this._gameManager.draw();
-        });
+        animateCardFlip(
+          card1,
+          () => card1.setFlipped(false),
+          undefined,
+          () => this._gameManager.draw()
+        );
+
+        animateCardFlip(
+          card2,
+          () => card2.setFlipped(false),
+          () => {
+            this._flippedCards = [];
+            this._gameManager.draw();
+          },
+          () => this._gameManager.draw()
+        );
       }, 1000);
     }
-  }
-
-  animateFlip(card: Card, onHalfFlip: () => void, onDone?: () => void): void {
-    card.startAnimation();
-
-    let progress = 0;
-    let direction = -1;
-
-    const animate = () => {
-      progress += 0.1;
-      card.setScaleX(Math.cos(progress)); // from 1 → 0 → -1
-
-      // halfway point
-      if (progress >= Math.PI / 2 && direction === -1) {
-        onHalfFlip(); // flip label or reverse flip
-        direction = 1;
-      }
-
-      if (progress >= Math.PI) {
-        card.setScaleX(1);
-        card.stopAnimation();
-        this._gameManager.draw();
-        if (onDone) onDone();
-        return;
-      }
-
-      this._gameManager.draw();
-      requestAnimationFrame(animate);
-    };
-
-    animate();
   }
 
   allCardsMatched(): boolean {
