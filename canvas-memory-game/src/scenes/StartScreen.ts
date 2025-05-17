@@ -15,7 +15,7 @@ class StartScreen {
   private _soundManager: SoundManager;
   private _buttons: Button[] = [];
   private _emojis = ['😀', '😅', '😂', '😍', '😎', '😡', '😱', '😴', '😇'];
-  private _emojiIndex = 0;
+  // private _emojiIndex = 0;
   private _onSelect: (difficulty: Difficulty) => void;
   private _backImage: HTMLImageElement = new Image();
   private _previewCard!: Card;
