@@ -22,7 +22,7 @@ class InputManager {
     if (this._gameManager.isGameFinished()) {
       // Check if restart button was clicked
       const uiManager = this._gameManager.getUIManager();
-      if (uiManager.isRestartButtonClicked(clickX, clickY)) {
+      if (uiManager.isRestartClicked(clickX, clickY)) {
         this._gameManager.startGame();
       }
       return;

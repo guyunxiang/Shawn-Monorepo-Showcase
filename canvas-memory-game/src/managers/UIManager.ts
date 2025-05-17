@@ -1,15 +1,42 @@
 import GameManager from "./GameManager";
 import Renderer from "../components/Render";
+import Button from "../components/Button";
 
 class UIManager {
   private _gameManager: GameManager;
   private _renderer: Renderer;
-  private _restartButtonRect = { x: 0, y: 0, width: 200, height: 60 };
+  private _restartButton: Button;
+  private _active: boolean = false;
 
   constructor(_gameManager: GameManager, _renderer: Renderer) {
     this._gameManager = _gameManager;
     this._renderer = _renderer;
+
+    const canvas = this._gameManager.getCanvas();
+    const w = 200;
+    const h = 60;
+    const x = (canvas.getWidth() - w) / 2;
+    const y = canvas.getHeight() * 0.5;
+
+    this._restartButton = new Button(x, y, w, h, "RESTART", _renderer);
+
+    const canvasEl = canvas.getElement();
+    canvasEl.addEventListener("mousedown", this.handleMouseDown);
+    canvasEl.addEventListener("mouseup", this.handleMouseUp);
   }
+
+  private handleMouseDown = (e: MouseEvent): void => {
+    const rect = this._gameManager.getCanvas().getElement().getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    this._active = this._restartButton.isClicked(x, y);
+    this._gameManager.draw();
+  };
+
+  private handleMouseUp = (): void => {
+    this._active = false;
+    this._gameManager.draw();
+  };
 
   drawGameInfo(steps: number, bestSteps: number): void {
     const ctx = this._renderer.getContext();
@@ -31,49 +58,18 @@ class UIManager {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    // text
-    const message = `🎉 Game Over! You finished in ${steps} steps`;
+    // draw game over text
     ctx.fillStyle = '#fff';
-    ctx.font = '36px Arial';
+    ctx.font = '48px serif';
     ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(message, canvasWidth / 2, canvasHeight / 2 - 60);
+    ctx.fillText(`🎉 Victory! You finished in ${steps} steps`, canvasWidth / 2, canvasHeight * 0.4);
 
     // draw restart button
-    this._restartButtonRect.width = 200;
-    this._restartButtonRect.height = 60;
-    this._restartButtonRect.x = canvasWidth / 2 - this._restartButtonRect.width / 2;
-    this._restartButtonRect.y = canvasHeight / 2 + 10;
-
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(
-      this._restartButtonRect.x,
-      this._restartButtonRect.y,
-      this._restartButtonRect.width,
-      this._restartButtonRect.height
-    );
-
-    ctx.strokeStyle = '#000000';
-    ctx.strokeRect(
-      this._restartButtonRect.x,
-      this._restartButtonRect.y,
-      this._restartButtonRect.width,
-      this._restartButtonRect.height
-    );
-
-    ctx.fillStyle = '#000000';
-    ctx.font = '24px Arial';
-    ctx.fillText('🔁 Restart', canvasWidth / 2, this._restartButtonRect.y + this._restartButtonRect.height / 2);
+    this._restartButton.draw(this._active);
   }
 
-  isRestartButtonClicked(x: number, y: number): boolean {
-    const { x: buttonX, y: buttonY, width, height } = this._restartButtonRect;
-    return (
-      x >= buttonX &&
-      x <= buttonX + width &&
-      y >= buttonY &&
-      y <= buttonY + height
-    );
+  isRestartClicked(x: number, y: number): boolean {
+    return this._restartButton.isClicked(x, y);
   }
 }
 
