@@ -26,7 +26,7 @@ class CardManager {
       if (!CardManager._backImage) {
         const backImgPromise = new Promise<void>((resolve) => {
           const img = new Image();
-          img.src = `/assets/${this._theme}/card-back.jpg`;
+          img.src = `/assets/${this._theme}/card-back.png`;
           img.onload = () => {
             CardManager._backImage = img;
             resolve();
