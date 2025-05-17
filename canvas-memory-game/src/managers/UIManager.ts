@@ -8,6 +8,7 @@ class UIManager {
   private _restartButton: Button;
   private _backButton: Button;
   private _active: boolean = false;
+  private _headerTopOffset: number = 20;
 
   constructor(_gameManager: GameManager, _renderer: Renderer) {
     this._gameManager = _gameManager;
@@ -18,7 +19,7 @@ class UIManager {
     const canvasHeight = canvas.getHeight();
 
     this._restartButton = new Button((canvasWidth - 200) / 2, canvasHeight * 0.5, 200, 60, "RESTART", _renderer);
-    this._backButton = new Button(20, 10, 100, 40, "BACK", _renderer);
+    this._backButton = new Button(20, 10 + this._headerTopOffset, 100, 40, "BACK", _renderer);
 
     const canvasEl = canvas.getElement();
     canvasEl.addEventListener("mousedown", this.handleMouseDown);
@@ -60,12 +61,12 @@ class UIManager {
     ctx.font = '48px Gloria Hallelujah';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
-    ctx.fillText(`Steps: ${steps}`, canvasWidth / 2, 20);
+    ctx.fillText(`Steps: ${steps}`, canvasWidth / 2, 20 + this._headerTopOffset);
 
     // draw Best on right
     ctx.textAlign = 'right';
     ctx.font = '20px Gloria Hallelujah';
-    ctx.fillText(`Best: ${isFinite(bestSteps) ? bestSteps : '-'}`, canvasWidth - 20, 26);
+    ctx.fillText(`Best: ${isFinite(bestSteps) ? bestSteps : '-'}`, canvasWidth - 20, 26 + this._headerTopOffset);
   }
 
   drawGameOver(steps: number): void {
