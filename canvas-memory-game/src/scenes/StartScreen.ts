@@ -1,5 +1,7 @@
 import Button from "../components/Button";
 import Renderer from "../components/Render";
+import SoundManager from "../managers/SoundManager";
+import Card from "../components/Card";
 
 type Difficulty = 'easy' | 'normal' | 'hard';
 
@@ -7,12 +9,14 @@ class StartScreen {
   private _canvas: HTMLCanvasElement;
   private _ctx: CanvasRenderingContext2D;
   private _renderer: Renderer;
+  private _soundManager: SoundManager;
   private _buttons: Button[] = [];
   private _emojis = ['😀', '😅', '😂', '😍', '😎', '😡', '😱', '😴', '😇'];
   private _emojiIndex = 0;
-  private _flipped = false;
-  private _scaleX = 1;
   private _onSelect: (difficulty: Difficulty) => void;
+  private _backImage: HTMLImageElement = new Image();
+  private _previewCard: Card;
+  private _activeButton: Button | null = null;
 
   constructor(canvas: HTMLCanvasElement, renderer: Renderer, onSelect: (difficulty: Difficulty) => void) {
     this._canvas = canvas;
@@ -20,8 +24,25 @@ class StartScreen {
     this._renderer = renderer;
     this._onSelect = onSelect;
 
+    this._soundManager = new SoundManager();
+    this._soundManager.enableAutoBGM(canvas);
+
+    this._backImage.src = "/assets/card-back.png";
+    this._backImage.onload = () => this.draw();
+
+    const w = 180;
+    const h = 240;
+    const x = (this._canvas.width - w) / 2;
+    const y = this._canvas.height * 0.25;
+    this._previewCard = new Card(
+      x, y,
+      w, h,
+      this._emojis[this._emojiIndex],
+      this._renderer,
+      this._backImage
+    );
+
     this.setupButtons();
-    this.draw();
     this.bindEvents();
   }
 
@@ -44,6 +65,8 @@ class StartScreen {
 
   private bindEvents(): void {
     this._canvas.addEventListener('click', this.handleClick);
+    this._canvas.addEventListener('mousedown', this.handleMouseDown);
+    this._canvas.addEventListener('mouseup', this.handleMouseUp);
   }
 
   private handleClick = (e: MouseEvent): void => {
@@ -51,15 +74,24 @@ class StartScreen {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // check if clicked on card
-    if (this.isCardClicked(x, y)) {
-      this.flipCard();
+    if (
+      x >= this._previewCard.getX() &&
+      x <= this._previewCard.getX() + this._previewCard.getWidth() &&
+      y >= this._previewCard.getY() &&
+      y <= this._previewCard.getY() + this._previewCard.getHeight()
+    ) {
+      this._soundManager.playFlip();
+      this.animateFlip(this._previewCard, () => {
+        this._emojiIndex = (this._emojiIndex + 1) % this._emojis.length;
+        this._previewCard.setLabel(this._emojis[this._emojiIndex]);
+        this._previewCard.setFlipped(true);
+      });
       return;
     }
 
-    // check buttons
     for (const button of this._buttons) {
       if (button.isClicked(x, y)) {
+        this._soundManager.playFlip();
         const text = button.getText().toLowerCase() as Difficulty;
         this.cleanup();
         this._onSelect(text);
@@ -68,35 +100,49 @@ class StartScreen {
     }
   };
 
-  private isCardClicked(x: number, y: number): boolean {
-    const w = 120;
-    const h = 160;
-    const cx = (this._canvas.width - w) / 2;
-    const cy = this._canvas.height * 0.25;
+  private handleMouseDown = (e: MouseEvent): void => {
+    const rect = this._canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    this._activeButton = null;
+    for (const button of this._buttons) {
+      if (button.isClicked(x, y)) {
+        this._activeButton = button;
+        break;
+      }
+    }
+    this.draw();
+  };
 
-    return x >= cx && x <= cx + w && y >= cy && y <= cy + h;
-  }
+  private handleMouseUp = (): void => {
+    this._activeButton = null;
+    this.draw();
+  };
 
-  private flipCard(): void {
-    this._flipped = !this._flipped;
+  private animateFlip(card: Card, onHalfFlip: () => void, onDone?: () => void): void {
+    card.startAnimation();
     let progress = 0;
+    let direction = -1;
 
     const animate = () => {
       progress += 0.1;
-      this._scaleX = Math.cos(progress);
+      card.setScaleX(Math.cos(progress));
 
-      if (progress >= Math.PI / 2 && this._flipped) {
-        this._emojiIndex = (this._emojiIndex + 1) % this._emojis.length;
+      if (progress >= Math.PI / 2 && direction === -1) {
+        onHalfFlip();
+        direction = 1;
+      }
+
+      if (progress >= Math.PI) {
+        card.setScaleX(1);
+        card.stopAnimation();
+        this.draw();
+        if (onDone) onDone();
+        return;
       }
 
       this.draw();
-
-      if (progress < Math.PI) {
-        requestAnimationFrame(animate);
-      } else {
-        this._scaleX = 1;
-        this.draw();
-      }
+      requestAnimationFrame(animate);
     };
 
     animate();
@@ -104,43 +150,14 @@ class StartScreen {
 
   public draw(): void {
     this._renderer.clear();
-
-    // draw card
-    const w = 120;
-    const h = 160;
-    const x = (this._canvas.width - w) / 2;
-    const y = this._canvas.height * 0.25;
-
-    this._ctx.save();
-    this._ctx.translate(x + w / 2, y + h / 2);
-    this._ctx.scale(this._scaleX, 1);
-    this._ctx.translate(-w / 2, -h / 2);
-
-    this._renderer.drawRoundedRect(0, 0, w, h, 12);
-    this._ctx.fillStyle = "#ffe082";
-    this._ctx.fill();
-    this._ctx.strokeStyle = "#888";
-    this._ctx.stroke();
-
-    this._ctx.fillStyle = "#000";
-    this._ctx.font = "48px serif";
-    this._ctx.textAlign = "center";
-    this._ctx.textBaseline = "middle";
-
-    if (this._flipped) {
-      this._ctx.fillText(this._emojis[this._emojiIndex], w / 2, h / 2);
-    } else {
-      this._ctx.fillText("?", w / 2, h / 2);
-    }
-
-    this._ctx.restore();
-
-    // draw buttons
-    this._buttons.forEach(btn => btn.draw());
+    this._previewCard.draw();
+    this._buttons.forEach(btn => btn.draw(btn === this._activeButton));
   }
 
   public cleanup(): void {
     this._canvas.removeEventListener('click', this.handleClick);
+    this._canvas.removeEventListener('mousedown', this.handleMouseDown);
+    this._canvas.removeEventListener('mouseup', this.handleMouseUp);
   }
 }
 
