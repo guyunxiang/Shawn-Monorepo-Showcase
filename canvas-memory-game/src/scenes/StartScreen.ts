@@ -49,7 +49,7 @@ class StartScreen {
 
   // initialize background image and background music
   private initBackgroundImage(): void {
-    this._backImage.src = `/assets/${this._theme}/card-back.jpg`;
+    this._backImage.src = `/assets/${this._theme}/card-back.png`;
     this._backImage.onload = () => this.initTheme();
   }
 
