@@ -2,12 +2,12 @@ import Button from "../components/Button";
 import Renderer from "../components/Render";
 import SoundManager from "../managers/SoundManager";
 import Card from "../components/Card";
-
-type Difficulty = 'easy' | 'normal' | 'hard';
+import WindowManager from "../managers/WindowManager";
+import type { Difficulty } from "../types/types";
 
 class StartScreen {
   private _canvas: HTMLCanvasElement;
-  private _ctx: CanvasRenderingContext2D;
+  // private _ctx: CanvasRenderingContext2D;
   private _renderer: Renderer;
   private _soundManager: SoundManager;
   private _buttons: Button[] = [];
@@ -15,25 +15,40 @@ class StartScreen {
   private _emojiIndex = 0;
   private _onSelect: (difficulty: Difficulty) => void;
   private _backImage: HTMLImageElement = new Image();
-  private _previewCard: Card;
+  private _previewCard!: Card;
   private _activeButton: Button | null = null;
+  private _windowManager: WindowManager;
 
   constructor(canvas: HTMLCanvasElement, renderer: Renderer, onSelect: (difficulty: Difficulty) => void) {
     this._canvas = canvas;
-    this._ctx = canvas.getContext("2d")!;
+    // this._ctx = canvas.getContext("2d")!;
     this._renderer = renderer;
     this._onSelect = onSelect;
-
     this._soundManager = new SoundManager();
-    this._soundManager.enableAutoBGM(canvas);
+    this._windowManager = new WindowManager();
 
+    this.initBackgroundImage();
+    this.initPreviewCard();
+    this.setupButtons();
+    this.bindEvents();
+
+    this._windowManager.addResizeListener(this.handleResize);
+  }
+
+  // initialize background image and background music
+  private initBackgroundImage(): void {
+    this._soundManager.enableAutoBGM(this._canvas);
     this._backImage.src = "/assets/card-back.png";
     this._backImage.onload = () => this.draw();
+  }
 
+  // initialize preview card with current canvas size
+  private initPreviewCard(): void {
     const w = 180;
     const h = 240;
     const x = (this._canvas.width - w) / 2;
     const y = this._canvas.height * 0.25;
+
     this._previewCard = new Card(
       x, y,
       w, h,
@@ -41,11 +56,39 @@ class StartScreen {
       this._renderer,
       this._backImage
     );
-
-    this.setupButtons();
-    this.bindEvents();
   }
 
+  // adjust layout of preview card and buttons based on canvas size
+  private layout(): void {
+    // re-layout preview card
+    const w = this._previewCard.getWidth();
+    const h = this._previewCard.getHeight();
+    const x = (this._canvas.width - w) / 2;
+    const y = this._canvas.height * 0.25;
+    this._previewCard.setPosition(x, y);
+
+    // re-layout buttons
+    const btnWidth = 120;
+    const spacing = 40;
+    const totalWidth = 3 * btnWidth + 2 * spacing;
+    const startX = (this._canvas.width - totalWidth) / 2;
+    const yBtn = this._canvas.height * 0.7;
+
+    this._buttons.forEach((button, i) => {
+      const x = startX + i * (btnWidth + spacing);
+      button.setPosition(x, yBtn);
+    });
+  }
+
+  // handle window resize
+  private handleResize = (): void => {
+    this._canvas.width = window.innerWidth;
+    this._canvas.height = window.innerHeight;
+    this.layout();
+    this.draw();
+  };
+
+  // setup difficulty buttons
   private setupButtons(): void {
     const btnWidth = 120;
     const btnHeight = 50;
@@ -63,12 +106,14 @@ class StartScreen {
     });
   }
 
+  // bind mouse events to canvas
   private bindEvents(): void {
     this._canvas.addEventListener('click', this.handleClick);
     this._canvas.addEventListener('mousedown', this.handleMouseDown);
     this._canvas.addEventListener('mouseup', this.handleMouseUp);
   }
 
+  // handle click event on canvas
   private handleClick = (e: MouseEvent): void => {
     const rect = this._canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -100,6 +145,7 @@ class StartScreen {
     }
   };
 
+  // handle mousedown to highlight active button
   private handleMouseDown = (e: MouseEvent): void => {
     const rect = this._canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -114,11 +160,13 @@ class StartScreen {
     this.draw();
   };
 
+  // handle mouseup to remove highlight
   private handleMouseUp = (): void => {
     this._activeButton = null;
     this.draw();
   };
 
+  // flip animation for the preview card
   private animateFlip(card: Card, onHalfFlip: () => void, onDone?: () => void): void {
     card.startAnimation();
     let progress = 0;
@@ -148,12 +196,14 @@ class StartScreen {
     animate();
   }
 
+  // redraw all UI
   public draw(): void {
     this._renderer.clear();
     this._previewCard.draw();
     this._buttons.forEach(btn => btn.draw(btn === this._activeButton));
   }
 
+  // remove event listeners
   public cleanup(): void {
     this._canvas.removeEventListener('click', this.handleClick);
     this._canvas.removeEventListener('mousedown', this.handleMouseDown);
