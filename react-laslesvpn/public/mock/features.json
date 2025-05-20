@@ -1,0 +1,43 @@
+{
+  "success": true,
+  "data": [
+    {
+      "title": "Free Plan",
+      "image": "./images/Free.png",
+      "price": "Free",
+      "features": [
+        "Unlimited Bandwitch",
+        "Encrypted Connection",
+        "No Traffic Logs",
+        "Works on All Devices"
+      ]
+    },
+    {
+      "title": "Standard Plan",
+      "image": "./images/Standard.png",
+      "price": "$9",
+      "period": "/ mo",
+      "features": [
+        "Unlimited Bandwitch",
+        "Encrypted Connection",
+        "Yes Traffic Logs",
+        "Works on All Devices",
+        "Connect Anyware"
+      ]
+    },
+    {
+      "title": "Premium Plan",
+      "image": "./images/Premium.png",
+      "price": "$12",
+      "period": "/ mo",
+      "features": [
+        "Unlimited Bandwitch",
+        "Encrypted Connection",
+        "Yes Traffic Logs",
+        "Works on All Devices",
+        "Connect Anyware",
+        "Get New Features"
+      ]
+    }
+  ]
+}
