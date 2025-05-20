@@ -1,35 +1,31 @@
-// import { useState, useEffect } from 'react'
-import './index.css'
+import { useState, useEffect } from 'react'
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ScrollToTop from '@/components/ScrollToTop';
 import Review from '@/components/home/Reviews';
+interface FeaturesData {
+  title: string;
+  image: string;
+  price: string;
+  features: string[];
+  period: string;
+}
 
 function HomePage() {
 
-  const Features = () => {
-    const featuresData = [
-      {
-        title: 'Free Plan',
-        image: './images/Free.png',
-        price: 'Free',
-        features: ['Unlimited Bandwitch', 'Encrypted Connection', 'No Traffic Logs', 'Works on All Devices']
-      },
-      {
-        title: 'Standard Plan',
-        image: './images/Standard.png',
-        price: '$9',
-        period: '/ mo',
-        features: ['Unlimited Bandwitch', 'Encrypted Connection', 'Yes Traffic Logs', 'Works on All Devices', 'Connect Anyware']
-      },
-      {
-        title: 'Premium Plan',
-        image: './images/Premium.png',
-        price: '$12',
-        period: '/ mo',
-        features: ['Unlimited Bandwitch', 'Encrypted Connection', 'Yes Traffic Logs', 'Works on All Devices', 'Connect Anyware', 'Get New Features']
+  const [featuresData, setFeaturesData] = useState<FeaturesData[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch("/mock/features.json");
+      const { success, data } = await res.json();
+      if (success) {
+        setFeaturesData(data);
       }
-    ];
+    }
+    fetchData();
+  }, []);
+
+  const Features = () => {
 
     return featuresData.map((plan, index) => (
       <div key={index} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg flex flex-col h-full hover:border-[#F53838] transition-colors">
@@ -41,7 +37,6 @@ function HomePage() {
           <ul className="space-y-4 text-left w-full mb-8 pl-6">
             {plan.features.map((feature, idx) => (
               <li key={idx} className="flex items-center gap-4">
-                {/* <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#F53838] flex items-center justify-center text-white">✓</span> */}
                 <img src="./images/Group 1223.png" className='w-6' alt="Success Icon"></img>
                 <p className="text-sm dark:text-gray-300 transition-colors duration-300">{feature}</p>
               </li>
