@@ -37,7 +37,6 @@ function HomePage() {
           <ul className="space-y-4 text-left w-full mb-8 pl-6">
             {plan.features.map((feature, idx) => (
               <li key={idx} className="flex items-center gap-4">
-                {/* <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#F53838] flex items-center justify-center text-white">✓</span> */}
                 <img src="./images/Group 1223.png" className='w-6' alt="Success Icon"></img>
                 <p className="text-sm dark:text-gray-300 transition-colors duration-300">{feature}</p>
               </li>
