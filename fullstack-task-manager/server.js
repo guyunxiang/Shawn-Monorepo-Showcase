@@ -1,4 +1,5 @@
 const path = require("path");
+require("dotenv").config();
 
 // Require the fastify framework and instantiate it
 const fastify = require("fastify")({
@@ -7,7 +8,7 @@ const fastify = require("fastify")({
 });
 
 // Handlebars helpers
-const handlebars = require("./src/helpers/handlebars");
+require("./src/helpers/handlebars");
 
 // initialize the database
 const initDB = require("./src/db/initDB");
@@ -31,7 +32,7 @@ fastify.register(require("@fastify/view"), {
 
 fastify.register(require("@fastify/cookie"));
 fastify.register(require("@fastify/jwt"), {
-  secret: process.env.JWT_SECRET || "jwt_secret_guyunxiang",
+  secret: process.env.JWT_SECRET,
   cookie: {
     cookieName: "token",
     signed: false,
