@@ -10,7 +10,6 @@ export default class GameManager {
   private _canvas: Canvas;
   private _renderer: Renderer;
   private _cardManager: CardManager;
-  // private _inputManager: InputManager;
   private _uiManager: UIManager;
   private _soundManager: SoundManager;
 
@@ -18,6 +17,14 @@ export default class GameManager {
   private _bestSteps: number = Infinity;
   private _isGameOver: boolean = false;
   private _theme: string = 'animals';
+
+  private _leftBgImage: HTMLImageElement = new Image();
+  private _rightBgImage: HTMLImageElement = new Image();
+  private _imgLoaded: number = 0;
+
+  // background entrance animation
+  private _bgAnimProgress: number = 0;
+  private _bgAnimSpeed: number = 0.05;
 
   constructor(difficulty: Difficulty = 'normal', theme: string = 'animals') {
     this._canvas = new Canvas(() => this.resize());
@@ -30,6 +37,11 @@ export default class GameManager {
     this._uiManager = new UIManager(this, this._renderer);
     new InputManager(this, this._canvas.getElement());
 
+    this._leftBgImage.src = '/assets/game-bg-lb.png';
+    this._rightBgImage.src = '/assets/game-bg-rb.png';
+    this._leftBgImage.onload = this._onImgLoad.bind(this);
+    this._rightBgImage.onload = this._onImgLoad.bind(this);
+
     this.init();
   }
 
@@ -41,6 +53,16 @@ export default class GameManager {
     });
   }
 
+  private _onImgLoad() {
+    this._imgLoaded++;
+    // when both images are ready, start drawing with animation
+    if (this._imgLoaded === 2 && this._cardManager.isReady()) {
+      // ensure card assets are also loaded
+      this._bgAnimProgress = 0;
+      this.draw();
+    }
+  }
+
   resize(): void {
     this._cardManager.resizeAndLayout();
     this._renderer.clear();
@@ -50,8 +72,9 @@ export default class GameManager {
   startGame(): void {
     this._steps = 0;
     this._isGameOver = false;
+    this._bgAnimProgress = 0; // reset animation progress
     this._cardManager.generateCards();
-    this.draw();
+    // this.draw();
   }
 
   draw(): void {
@@ -59,9 +82,35 @@ export default class GameManager {
     this._cardManager.drawCards();
     this._uiManager.drawGameInfo(this._steps, this._bestSteps);
 
+    // draw animated decorative background images
+    if (this._imgLoaded >= 2) {
+      this.drawBackageImage();
+
+      // animate until progress reaches 1
+      if (this._bgAnimProgress < 1) {
+        this._bgAnimProgress += this._bgAnimSpeed;
+        if (this._bgAnimProgress > 1) this._bgAnimProgress = 1;
+
+        requestAnimationFrame(() => this.draw());
+      }
+    }
+
     if (this._isGameOver) {
       this._uiManager.drawGameOver(this._steps);
     }
+  }
+
+  private drawBackageImage() {
+    const ctx = this._canvas.getContext();
+    const canvasWidth = this._canvas.getWidth();
+    const canvasHeight = this._canvas.getHeight();
+
+    const leftX = -this._leftBgImage.width + this._leftBgImage.width * this._bgAnimProgress;
+    const rightX = canvasWidth - this._rightBgImage.width * this._bgAnimProgress;
+    const y = canvasHeight - this._leftBgImage.height;
+
+    ctx.drawImage(this._leftBgImage, leftX, y);
+    ctx.drawImage(this._rightBgImage, rightX, y);
   }
 
   incrementSteps(): void {

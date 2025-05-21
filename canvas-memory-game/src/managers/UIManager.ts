@@ -50,9 +50,6 @@ class UIManager {
     const canvas = this._gameManager.getCanvas();
     const canvasWidth = canvas.getWidth();
 
-    // clear any existing header
-    ctx.clearRect(0, 0, canvasWidth, 80);
-
     // draw back button
     this._backButton.draw();
 

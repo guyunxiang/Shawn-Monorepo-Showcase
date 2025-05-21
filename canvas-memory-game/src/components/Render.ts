@@ -7,6 +7,8 @@ class Renderer {
 
   clear(): void {
     this._ctx.clearRect(0, 0, this._ctx.canvas.width, this._ctx.canvas.height);
+    this._ctx.fillStyle = '#fbe2c2';
+    this._ctx.fillRect(0, 0, this._ctx.canvas.width, this._ctx.canvas.height);
   }
 
   drawRoundedRect(x: number, y: number, width: number, height: number, radius: number): void {

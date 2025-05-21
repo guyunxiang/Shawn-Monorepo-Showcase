@@ -15,6 +15,7 @@ class CardManager {
   private _imageCache: Map<string, HTMLImageElement> = new Map();
   private _themeImages: HTMLImageElement[] = [];
   private _theme: string = 'animals';
+  private _assetsLoaded: boolean = false;
 
   constructor(_gameManager: GameManager, difficulty: Difficulty) {
     this._gameManager = _gameManager;
@@ -36,16 +37,19 @@ class CardManager {
             resolve();
           };
         });
-
         const themeConfigPromise = this.loadThemeConfig();
+        this._assetsLoaded = true;
         await Promise.all([backImgPromise, themeConfigPromise]);
       }
-
       onLoaded();
     } catch (error) {
       console.error("Error loading assets:", error);
       onLoaded();
     }
+  }
+
+  isReady(): boolean {
+    return this._assetsLoaded;
   }
 
   private async loadThemeConfig(): Promise<void> {
@@ -76,37 +80,62 @@ class CardManager {
     const { rows, cols } = this.getGridSize();
     const paddingTop = 80;
 
-    const availableWidth = canvasWidth;
-    const availableHeight = canvasHeight - paddingTop;
+    // define scaling factor for card area (60%)
+    // const scaleFactor = 0.6;
+    let scaleFactor = 1;
+    switch (this._difficulty) {
+      case "easy":
+        scaleFactor = 0.6;
+        break;
+      case "normal":
+        scaleFactor = 0.75;
+        break;
+      case "hard":
+        scaleFactor = 0.9;
+        break;
+      default: 
+        scaleFactor = 0.9;
+    }
+    
 
-    const cardHeight = availableHeight / (rows + 1);
+    // calculate reduced available area
+    const scaledWidth = canvasWidth * scaleFactor;
+    const scaledHeight = (canvasHeight - paddingTop) * scaleFactor;
+
+    // calculate card size based on scaled area
+    const cardHeight = scaledHeight / (rows + 1);
     const cardWidth = (cardHeight * 3) / 4;
 
+    // check if total card width exceeds scaled width
     const totalCardWidth = cols * cardWidth + (cols + 1) * (cardWidth / 2);
-
     let finalCardWidth = cardWidth;
     let finalCardHeight = cardHeight;
 
-    if (totalCardWidth > availableWidth) {
-      finalCardWidth = availableWidth / (cols + 1);
+    if (totalCardWidth > scaledWidth) {
+      finalCardWidth = scaledWidth / (cols + 1);
       finalCardHeight = (finalCardWidth * 4) / 3;
     }
 
-    const paddingX = (availableWidth - cols * finalCardWidth) / (cols + 1);
-    const paddingY = (availableHeight - rows * finalCardHeight) / (rows + 1);
+    const paddingX = (scaledWidth - cols * finalCardWidth) / (cols + 1);
+    const paddingY = (scaledHeight - rows * finalCardHeight) / (rows + 1);
+
+    // calculate offset to center the whole card grid on canvas
+    const offsetX = (canvasWidth - scaledWidth) / 2;
+    const offsetY = (canvasHeight - paddingTop - scaledHeight) / 2 + paddingTop;
 
     for (let i = 0; i < this._cards.length; i++) {
       const col = i % cols;
       const row = Math.floor(i / cols);
 
-      const x = paddingX + col * (finalCardWidth + paddingX);
-      const y = paddingTop + paddingY + row * (finalCardHeight + paddingY);
+      const x = offsetX + paddingX + col * (finalCardWidth + paddingX);
+      const y = offsetY + row * (finalCardHeight + paddingY);
 
       const card = this._cards[i];
       card.setPosition(x, y);
       card.setSize(finalCardWidth, finalCardHeight);
     }
   }
+  
 
   generateCards(): void {
     const { rows, cols } = this.getGridSize();

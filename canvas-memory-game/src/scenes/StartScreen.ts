@@ -98,9 +98,6 @@ class StartScreen {
     const ctx = this._canvas.getContext("2d");
     if (!ctx) return;
 
-    ctx.fillStyle = '#fbe2c2';
-    ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
-
     // update animation progress
     if (this._animationProgress < 1) {
       this._animationProgress += this._animationSpeed;
