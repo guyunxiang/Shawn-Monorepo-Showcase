@@ -42,7 +42,7 @@ class UIManager {
 
   private handleMouseUp = (): void => {
     this._active = false;
-    this._gameManager.draw();
+    requestAnimationFrame(() => this._gameManager.draw());
   };
 
   drawGameInfo(steps: number, bestSteps: number): void {
