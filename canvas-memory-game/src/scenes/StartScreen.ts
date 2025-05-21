@@ -250,6 +250,7 @@ class StartScreen {
         this._soundManager.playFlip();
         const text = button.getText().toLowerCase() as Difficulty;
         this.cleanup();
+        // start game
         this._onSelect(text);
         return;
       }
@@ -277,7 +278,9 @@ class StartScreen {
     this.draw();
   };
 
-  public updateAndRender() {
+  // redraw all UI
+  public draw(): void {
+    this._renderer.clear();
     this.drawBackground();
 
     this.drawTitle();
@@ -286,14 +289,8 @@ class StartScreen {
     this._buttons.forEach(btn => btn.draw(btn === this._activeButton));
 
     if (this._animationProgress < 1) {
-      requestAnimationFrame(() => this.updateAndRender());
+      requestAnimationFrame(() => this.draw());
     }
-  }
-
-  // redraw all UI
-  public draw(): void {
-    this._renderer.clear();
-    this.updateAndRender();
   }
 
   // remove event listeners
