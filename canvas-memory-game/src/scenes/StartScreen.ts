@@ -23,14 +23,19 @@ class StartScreen {
   private _windowManager: WindowManager;
   private _themeImages: HTMLImageElement[] = [];
   private _theme: string = 'animals';
-  private _backgroundImage: HTMLImageElement = new Image();
+  // private _backgroundImage: HTMLImageElement = new Image();
+  private _leftBgImage: HTMLImageElement = new Image();
+  private _rightBgImage: HTMLImageElement = new Image();
   private _titleImage: HTMLImageElement = new Image();
   private _centerBgImage: HTMLImageElement = new Image();
 
+  private _animationProgress = 0;
+  private _animationSpeed = 0.02;
+
   constructor(
-    canvas: HTMLCanvasElement, 
-    renderer: Renderer, 
-    onSelect: (difficulty: Difficulty) => void, 
+    canvas: HTMLCanvasElement,
+    renderer: Renderer,
+    onSelect: (difficulty: Difficulty) => void,
     theme: string = "animals"
   ) {
     this._canvas = canvas;
@@ -53,7 +58,10 @@ class StartScreen {
   // initialize background image and background music
   private initImage(): void {
     this._backImage.src = `/assets/${this._theme}/card-back.png`;
-    this._backgroundImage.src = "/assets/bg-startscreen.png";
+    // this._backgroundImage.src = "/assets/bg-startscreen.png";
+    this._leftBgImage.src = "/assets/start-bg-left.png";
+    this._rightBgImage.src = "/assets/start-bg-right.png";
+
     this._titleImage.src = "/assets/title.png";
     this._centerBgImage.src = "/assets/bg-center.png";
     this._backImage.onload = () => this.initTheme();
@@ -90,8 +98,20 @@ class StartScreen {
     const ctx = this._canvas.getContext("2d");
     if (!ctx) return;
 
-    ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
-    ctx.drawImage(this._backgroundImage, 0, 0, this._canvas.width, this._canvas.height);
+    ctx.fillStyle = '#fbe2c2';
+    ctx.fillRect(0, 0, this._canvas.width, this._canvas.height);
+
+    // update animation progress
+    if (this._animationProgress < 1) {
+      this._animationProgress += this._animationSpeed;
+      if (this._animationProgress > 1) this._animationProgress = 1;
+    }
+
+    const offsetLeft = -this._leftBgImage.width + this._leftBgImage.width * this._animationProgress;
+    const offsetRight = this._canvas.width - this._rightBgImage.width * this._animationProgress;
+
+    ctx.drawImage(this._leftBgImage, offsetLeft, 0, this._leftBgImage.width, this._canvas.height);
+    ctx.drawImage(this._rightBgImage, offsetRight, 0, this._rightBgImage.width, this._canvas.height);
   }
 
   private async initTheme() {
@@ -145,7 +165,7 @@ class StartScreen {
       this._previewCard.draw();
     }
   }
-  
+
 
   // adjust layout of preview card and buttons based on canvas size
   private layout(): void {
@@ -260,17 +280,23 @@ class StartScreen {
     this.draw();
   };
 
-  // redraw all UI
-  public draw(): void {
-    this._renderer.clear();
-
+  public updateAndRender() {
     this.drawBackground();
+
     this.drawTitle();
     this.drawCenterPreview();
 
-    // this._previewCard.draw();
-    
     this._buttons.forEach(btn => btn.draw(btn === this._activeButton));
+
+    if (this._animationProgress < 1) {
+      requestAnimationFrame(() => this.updateAndRender());
+    }
+  }
+
+  // redraw all UI
+  public draw(): void {
+    this._renderer.clear();
+    this.updateAndRender();
   }
 
   // remove event listeners
