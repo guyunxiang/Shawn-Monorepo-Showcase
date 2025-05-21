@@ -23,11 +23,19 @@ class StartScreen {
   private _windowManager: WindowManager;
   private _themeImages: HTMLImageElement[] = [];
   private _theme: string = 'animals';
+  // private _backgroundImage: HTMLImageElement = new Image();
+  private _leftBgImage: HTMLImageElement = new Image();
+  private _rightBgImage: HTMLImageElement = new Image();
+  private _titleImage: HTMLImageElement = new Image();
+  private _centerBgImage: HTMLImageElement = new Image();
+
+  private _animationProgress = 0;
+  private _animationSpeed = 0.02;
 
   constructor(
-    canvas: HTMLCanvasElement, 
-    renderer: Renderer, 
-    onSelect: (difficulty: Difficulty) => void, 
+    canvas: HTMLCanvasElement,
+    renderer: Renderer,
+    onSelect: (difficulty: Difficulty) => void,
     theme: string = "animals"
   ) {
     this._canvas = canvas;
@@ -39,7 +47,7 @@ class StartScreen {
     this._windowManager = new WindowManager();
 
     this._soundManager.enableAutoBGM(this._canvas);
-    this.initBackgroundImage();
+    this.initImage();
 
     this.setupButtons();
     this.bindEvents();
@@ -48,15 +56,21 @@ class StartScreen {
   }
 
   // initialize background image and background music
-  private initBackgroundImage(): void {
+  private initImage(): void {
     this._backImage.src = `/assets/${this._theme}/card-back.png`;
+    // this._backgroundImage.src = "/assets/bg-startscreen.png";
+    this._leftBgImage.src = "/assets/start-bg-left.png";
+    this._rightBgImage.src = "/assets/start-bg-right.png";
+
+    this._titleImage.src = "/assets/title.png";
+    this._centerBgImage.src = "/assets/bg-center.png";
     this._backImage.onload = () => this.initTheme();
   }
 
   // initialize preview card with current canvas size
   private initPreviewCard(): void {
-    const w = 225;
-    const h = 300;
+    const w = 165;
+    const h = 220;
     const x = (this._canvas.width - w) / 2;
     const y = this._canvas.height * 0.25;
 
@@ -80,11 +94,75 @@ class StartScreen {
     return this._themeImages[idx];
   }
 
+  private drawBackground(): void {
+    const ctx = this._canvas.getContext("2d");
+    if (!ctx) return;
+
+    // update animation progress
+    if (this._animationProgress < 1) {
+      this._animationProgress += this._animationSpeed;
+      if (this._animationProgress > 1) this._animationProgress = 1;
+    }
+
+    const offsetLeft = -this._leftBgImage.width + this._leftBgImage.width * this._animationProgress;
+    const offsetRight = this._canvas.width - this._rightBgImage.width * this._animationProgress;
+
+    ctx.drawImage(this._leftBgImage, offsetLeft, 0, this._leftBgImage.width, this._canvas.height);
+    ctx.drawImage(this._rightBgImage, offsetRight, 0, this._rightBgImage.width, this._canvas.height);
+  }
+
   private async initTheme() {
     this._themeImages = await loadThemeImages(this._theme);
     this.initPreviewCard();
     this.draw();
   }
+
+  private drawTitle(): void {
+    const ctx = this._canvas.getContext("2d");
+    if (!ctx || !this._titleImage.complete) return;
+
+    const centerX = this._canvas.width / 2;
+
+    // draw title image
+    const imgWidth = 508; // adjust based on your actual image size
+    const imgHeight = 75;
+    const imgX = centerX - imgWidth / 2;
+    const imgY = 80;
+
+    ctx.drawImage(this._titleImage, imgX, imgY, imgWidth, imgHeight);
+
+    // draw subtitle text below image
+    ctx.font = "800 24px 'Playpen Sans Arabic', sans-serif";
+    ctx.fillStyle = "#2e5c3f";
+    ctx.textAlign = "center";
+    ctx.fillText("A Cozy Game for Sharp Minds", centerX, imgY + imgHeight + 40);
+  }
+
+  private drawCenterPreview(): void {
+    const ctx = this._canvas.getContext("2d");
+    if (!ctx || !this._centerBgImage.complete) return;
+
+    const bgWidth = 615;
+    const bgHeight = 393;
+    const centerX = this._canvas.width / 2;
+    const bgX = centerX - bgWidth / 2;
+    const bgY = 220;
+
+    // draw the decorative center background
+    ctx.drawImage(this._centerBgImage, bgX, bgY, bgWidth, bgHeight);
+
+    // draw preview card on top
+    if (this._previewCard) {
+      const cardW = this._previewCard.getWidth();
+      const cardH = this._previewCard.getHeight();
+      const cardX = centerX - cardW / 2;
+      const cardY = bgY + (bgHeight - cardH) / 2;
+
+      this._previewCard.setPosition(cardX, cardY);
+      this._previewCard.draw();
+    }
+  }
+
 
   // adjust layout of preview card and buttons based on canvas size
   private layout(): void {
@@ -199,11 +277,23 @@ class StartScreen {
     this.draw();
   };
 
+  public updateAndRender() {
+    this.drawBackground();
+
+    this.drawTitle();
+    this.drawCenterPreview();
+
+    this._buttons.forEach(btn => btn.draw(btn === this._activeButton));
+
+    if (this._animationProgress < 1) {
+      requestAnimationFrame(() => this.updateAndRender());
+    }
+  }
+
   // redraw all UI
   public draw(): void {
     this._renderer.clear();
-    this._previewCard.draw();
-    this._buttons.forEach(btn => btn.draw(btn === this._activeButton));
+    this.updateAndRender();
   }
 
   // remove event listeners
