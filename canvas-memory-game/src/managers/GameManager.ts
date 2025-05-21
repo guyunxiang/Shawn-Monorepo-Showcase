@@ -24,7 +24,7 @@ export default class GameManager {
 
   // background entrance animation
   private _bgAnimProgress: number = 0;
-  private _bgAnimSpeed: number = 0.05;
+  private _bgAnimSpeed: number = 0.03;
 
   constructor(difficulty: Difficulty = 'normal', theme: string = 'animals') {
     this._canvas = new Canvas(() => this.resize());
