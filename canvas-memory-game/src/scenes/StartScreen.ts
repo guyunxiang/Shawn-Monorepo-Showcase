@@ -1,5 +1,3 @@
-// Final StartScreen.ts with entry and exit transition logic
-
 import type { Difficulty } from "../types/types";
 import Button from "../components/Button";
 import Renderer from "../components/Render";
@@ -48,7 +46,6 @@ class StartScreen {
     this._soundManager = new SoundManager();
     this._windowManager = new WindowManager();
 
-    this._soundManager.enableAutoBGM(this._canvas);
     this.initImage();
 
     this.setupButtons();
