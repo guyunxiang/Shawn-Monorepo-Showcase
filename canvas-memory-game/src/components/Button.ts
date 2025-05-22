@@ -19,38 +19,40 @@ class Button {
 
   draw(isActive: boolean = false): void {
     const ctx = this._renderer.getContext();
-
     ctx.save();
-    ctx.beginPath();
 
-    // adjust vertical position if pressed
     const offsetY = isActive ? 2 : 0;
     const y = this._y + offsetY;
 
-    // deeper color for pressed state
-    const gradient = ctx.createLinearGradient(this._x, y, this._x, y + this._height);
-    if (isActive) {
-      gradient.addColorStop(0, '#fbc02d');
-      gradient.addColorStop(1, '#f9a825');
-    } else {
-      gradient.addColorStop(0, '#fff59d');
-      gradient.addColorStop(1, '#fbc02d');
-    }
+    // draw outer border
+    ctx.beginPath();
+    this._renderer.drawRoundedRect(this._x, y, this._width, this._height, 16);
+    ctx.fillStyle = "#754332"; // dark border
+    ctx.fill();
 
-    this._renderer.drawRoundedRect(this._x, y, this._width, this._height, 10);
+    // draw inner button with lighter orange
+    ctx.beginPath();
+    this._renderer.drawRoundedRect(this._x + 2, y + 2, this._width - 4, this._height - 4, 14);
+    const gradient = ctx.createLinearGradient(0, y, 0, y + this._height);
+    if (isActive) {
+      gradient.addColorStop(0, '#e19b5a'); // darker pressed state
+      gradient.addColorStop(1, '#c37d34');
+    } else {
+      gradient.addColorStop(0, '#f7c27c');
+      gradient.addColorStop(1, '#f3b66f'); // match screenshot
+    }
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    // draw button text
-    ctx.fillStyle = '#2e5c3f';
-    ctx.font = "bold 18px 'Playpen Sans Arabic'";
+    // draw text
+    ctx.fillStyle = "#6e3d2d"; // font color
+    ctx.font = "bold 20px 'Playpen Sans Arabic'";
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(this._text, this._x + this._width / 2, y + this._height / 2 + 5);
+    ctx.fillText(this._text, this._x + this._width / 2, y + this._height / 2 + 2);
 
     ctx.restore();
   }
-
 
   isClicked(clickX: number, clickY: number): boolean {
     return (
