@@ -32,7 +32,7 @@ fastify.register(require("@fastify/view"), {
 
 fastify.register(require("@fastify/cookie"));
 fastify.register(require("@fastify/jwt"), {
-  secret: process.env.JWT_SECRET,
+  secret: process.env.SECRET,
   cookie: {
     cookieName: "token",
     signed: false,
