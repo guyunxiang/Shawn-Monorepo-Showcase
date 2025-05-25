@@ -146,7 +146,7 @@ class StartScreen {
     const imgWidth = 508;
     const imgHeight = 75;
     const imgX = centerX - imgWidth / 2;
-    const imgY = 80;
+    const imgY = this._canvas.height * 0.072;
     ctx.drawImage(this._titleImage, imgX, imgY, imgWidth, imgHeight);
     ctx.font = "800 24px 'Playpen Sans Arabic', sans-serif";
     ctx.fillStyle = "#2e5c3f";
@@ -161,7 +161,7 @@ class StartScreen {
     const bgHeight = 393;
     const centerX = this._canvas.width / 2;
     const bgX = centerX - bgWidth / 2;
-    const bgY = 220;
+    const bgY = this._canvas.height * 0.23;
     ctx.drawImage(this._centerBgImage, bgX, bgY, bgWidth, bgHeight);
     if (this._previewCard) {
       const cardW = this._previewCard.getWidth();
@@ -264,7 +264,7 @@ class StartScreen {
     const spacing = 40;
     const totalWidth = 3 * btnWidth + 2 * spacing;
     const startX = (this._canvas.width - totalWidth) / 2;
-    const y = this._canvas.height * 0.7;
+    const y = this._canvas.height * 0.855;
     const difficulties: Difficulty[] = ['easy', 'normal', 'hard'];
     difficulties.forEach((label, i) => {
       const x = startX + i * (btnWidth + spacing);
@@ -289,7 +289,7 @@ class StartScreen {
     const spacing = 40;
     const totalWidth = 3 * btnWidth + 2 * spacing;
     const startX = (this._canvas.width - totalWidth) / 2;
-    const yBtn = this._canvas.height * 0.7;
+    const yBtn = this._canvas.height * 0.855;
 
     this._buttons.forEach((button, i) => {
       const x = startX + i * (btnWidth + spacing);
