@@ -1,4 +1,28 @@
+import { eventBus } from "../core/EventBus.js";
+
+/**
+ * Card - A memory card component with flip animation and interactive states
+ * Extends Phaser.GameObjects.Container to manage card elements as a group
+ */
 export class Card extends Phaser.GameObjects.Container {
+  /**
+   * Create a new card instance
+   * @param {Phaser.Scene} scene - The scene to add the card to
+   * @param {number} x - The x coordinate of the card
+   * @param {number} y - The y coordinate of the card
+   * @param {Object} config - Card configuration options
+   * @param {number} [config.width=135] - Width of the card
+   * @param {number} [config.height=180] - Height of the card
+   * @param {string} [config.backTexture="card-back"] - Texture key for card back
+   * @param {string} [config.frontTexture="card-front"] - Texture key for card front
+   * @param {number} [config.flipDuration=300] - Duration of flip animation in ms
+   * @param {string} [config.flipSound="flip"] - Sound key to play on flip
+   * @param {boolean} [config.isFlipped=false] - Initial flip state
+   * @param {Function} [config.onClick=()=>{}] - Callback when card is clicked
+   * @param {Function} [config.onFlipComplete=()=>{}] - Callback when flip completes
+   * @param {boolean} [config.interactive=true] - Whether card is interactive
+   * @param {Object} [config.cardData=null] - Data associated with the card
+   */
   constructor(scene, x, y, config = {}) {
     super(scene, x, y);
     this.scene = scene;
@@ -41,6 +65,10 @@ export class Card extends Phaser.GameObjects.Container {
     scene.add.existing(this);
   }
 
+  /**
+   * Create card visual elements
+   * Creates and positions the front and back sides of the card
+   */
   createCard() {
     const { width, height, backTexture, frontTexture } = this.config;
 
@@ -67,6 +95,10 @@ export class Card extends Phaser.GameObjects.Container {
     }
   }
 
+  /**
+   * Set up card interaction events
+   * Handles click and hover effects
+   */
   setupInteraction() {
     if (!this.config.interactive) return;
 
@@ -104,7 +136,11 @@ export class Card extends Phaser.GameObjects.Container {
     });
   }
 
-  // Flip card (main method)
+  /**
+   * Flip the card to a specific state
+   * @param {boolean} [toFront=null] - Target flip state (null to toggle)
+   * @returns {Promise} Resolves when flip animation completes
+   */
   flip(toFront = null) {
     if (this.isFlipping) return Promise.resolve();
 
@@ -121,16 +157,18 @@ export class Card extends Phaser.GameObjects.Container {
     return this.performFlip(targetState);
   }
 
-  // Execute flip animation
+  /**
+   * Execute the flip animation
+   * @param {boolean} toFront - Whether to flip to front or back
+   * @returns {Promise} Resolves when animation completes
+   */
   performFlip(toFront) {
     return new Promise((resolve) => {
       this.isFlipping = true;
-      const { flipDuration, flipSound } = this.config;
+      const { flipDuration } = this.config;
 
       // Play flip sound
-      if (flipSound && this.scene.sound) {
-        this.scene.sound.play(flipSound);
-      }
+      eventBus.emit("sound:play", "flip");
 
       // First phase: compress to 0
       this.scene.tweens.add({
@@ -173,13 +211,21 @@ export class Card extends Phaser.GameObjects.Container {
     });
   }
 
-  // Delayed texture update during flip
+  /**
+   * Prepare textures for next flip
+   * @param {string} frontTexture - New front texture key
+   * @param {string} [backTexture=null] - New back texture key
+   */
   prepareNextTexture(frontTexture, backTexture = null) {
     this._nextFrontTexture = frontTexture;
     this._nextBackTexture = backTexture;
   }
 
-  // Show front side
+  /**
+   * Show the front side of the card
+   * @param {boolean} [animated=true] - Whether to animate the flip
+   * @returns {Promise} Resolves when flip completes
+   */
   showFront(animated = true) {
     if (animated) {
       return this.flip(true);
@@ -191,7 +237,11 @@ export class Card extends Phaser.GameObjects.Container {
     }
   }
 
-  // Show back side
+  /**
+   * Show the back side of the card
+   * @param {boolean} [animated=true] - Whether to animate the flip
+   * @returns {Promise} Resolves when flip completes
+   */
   showBack(animated = true) {
     if (animated) {
       return this.flip(false);
@@ -203,7 +253,10 @@ export class Card extends Phaser.GameObjects.Container {
     }
   }
 
-  // Update front texture
+  /**
+   * Update the front texture of the card
+   * @param {string} texture - New texture key
+   */
   setFrontTexture(texture) {
     this.frontSide.setTexture(texture);
     this.frontSide.setDisplaySize(
@@ -213,24 +266,36 @@ export class Card extends Phaser.GameObjects.Container {
     this.config.frontTexture = texture;
   }
 
-  // Update back texture
+  /**
+   * Update the back texture of the card
+   * @param {string} texture - New texture key
+   */
   setBackTexture(texture) {
     this.backSide.setTexture(texture);
     this.backSide.setDisplaySize(this.config.width, this.config.height);
     this.config.backTexture = texture;
   }
 
-  // Set card data
+  /**
+   * Set the card's associated data
+   * @param {Object} data - Data to associate with the card
+   */
   setCardData(data) {
     this.cardData = data;
   }
 
-  // Get card data
+  /**
+   * Get the card's associated data
+   * @returns {Object} The card's data
+   */
   getCardData() {
     return this.cardData;
   }
 
-  // Enable/disable interaction
+  /**
+   * Enable or disable card interaction
+   * @param {boolean} enabled - Whether the card should be interactive
+   */
   setInteractive(enabled) {
     this.config.interactive = enabled;
     if (enabled) {
@@ -240,21 +305,30 @@ export class Card extends Phaser.GameObjects.Container {
     }
   }
 
-  // Match check (for memory game)
+  /**
+   * Check if this card matches another card
+   * @param {Card} otherCard - The card to compare with
+   * @returns {boolean} True if cards match
+   */
   matches(otherCard) {
     if (!this.cardData || !otherCard.cardData) return false;
     return this.cardData.id === otherCard.cardData.id;
   }
 
-  // Reset card state
+  /**
+   * Reset the card to its initial state
+   */
   reset() {
     this.showBack(false);
     this.setScale(1);
     this.isFlipping = false;
   }
 
-  // Clean up when destroyed
+  /**
+   * Clean up card resources
+   */
   destroy() {
+    eventBus.removeGroup("card");
     // Stop all animations
     this.scene.tweens.killTweensOf(this);
     super.destroy();

@@ -1,14 +1,30 @@
+import { eventBus } from "../core/EventBus.js";
+
+/**
+ * GameManager - Manages core game logic and state
+ * Handles card matching, scoring, and game progression
+ */
 export class GameManager {
+  /**
+   * Initialize the game manager
+   * @param {Phaser.Scene} scene - The scene instance to manage
+   */
   constructor(scene) {
     this.scene = scene;
     this.score = 0;
     this.moves = 0;
 
-    // Listen for card selection events
-    this.scene.events.on("cardSelected", this.handleCardSelection, this);
-    this.scene.events.on("allMatched", this.handleAllMatched, this);
+    // Set up event listeners for game events
+    eventBus.on("gameManager:cardSelected", this.handleCardSelection, this);
+    eventBus.on("gameManager:allMatched", this.handleAllMatched, this);
+    eventBus.on("gameManager:playAgain", this.handlePlayAgain, this);
   }
 
+  /**
+   * Handle card selection event
+   * @param {Object} param0 - Event parameters
+   * @param {Array} param0.selectedCards - Array of currently selected cards
+   */
   handleCardSelection({ selectedCards }) {
     if (selectedCards.length === 2) {
       this.moves++;
@@ -16,37 +32,55 @@ export class GameManager {
     }
   }
 
+  /**
+   * Check if two selected cards match
+   * @param {Array} selectedCards - Array containing two selected cards
+   */
   checkMatch(selectedCards) {
     const [card1, card2] = selectedCards;
-    // updae score
-    this.scene.hud.updateScore(1);
-    // check match
+    // Update score
+    eventBus.emit("hud:updateScore", 1);
+    // Check if cards match
     if (card1.cardData.id === card2.cardData.id) {
-      this.scene.sound.play("match");
-      this.scene.events.emit("matchSuccess", { card1, card2 });
+      eventBus.emit("sound:play", "match");
+      eventBus.emit("cardManager:matchSuccess", { card1, card2 });
     } else {
-      this.scene.sound.play("fail");
-      this.scene.events.emit("matchFailure", { card1, card2 });
+      eventBus.emit("sound:play", "fail");
+      eventBus.emit("cardManager:matchFailure", { card1, card2 });
     }
   }
 
+  /**
+   * Handle play again event
+   * Resets the game state and creates new cards
+   */
   handlePlayAgain() {
-    this.scene.hud.clearCurrentScore();
-    this.scene.createGameCards();
+    eventBus.emit("hud:clearScore");
+    eventBus.emit("gameScene:createCards");
   }
 
+  /**
+   * Handle all cards matched event
+   * Shows victory screen and plays victory sound
+   */
   handleAllMatched() {
-    this.scene.hud.updateBestScore();
+    eventBus.emit("hud:updateBestScore");
+    // Clear cards and show victory screen after delay
     this.scene.time.delayedCall(800, () => {
-      this.scene.cardManager.clearCards();
-      this.scene.createVictory();
+      eventBus.emit("cardManager:clearCards");
+      eventBus.emit("gameScene:createVictory");
     });
+    // Play victory sound after delay
     this.scene.time.delayedCall(1000, () => {
-      this.scene.sound.play("victory");
+      eventBus.emit("sound:play", "victory");
     });
   }
 
+  /**
+   * Clean up game manager resources
+   * Removes event listeners
+   */
   destroy() {
-    this.scene.events.off("cardSelected", this.handleCardSelection, this);
+    eventBus.removeGroup("gameManager");
   }
 }
