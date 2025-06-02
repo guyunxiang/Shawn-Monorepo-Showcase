@@ -10,6 +10,7 @@ This monorepo contains a collection of personal projects built with different te
 | [`canvas-memory-game`](./canvas-memory-game) | A memory card matching game built using HTML5 Canvas and TypeScript | Canvas, TypeScript               |
 | [`fullstack-task-manager`](./fullstack-task-manager)   | A fullstack task management web app                                 | React, Node.js, Express, MongoDB |
 | [`static-laslesvpn`](./static-laslesvpn)   | A simple landing page built with HTML and CSS only                  | HTML, CSS                        |
+| [`phaser-memory-match`](./phaser-memory-match) | A modern memory matching card game with beautiful animations        | Phaser 3, JavaScript             |
 
 ## 📦 Getting Started
 
