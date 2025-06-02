@@ -1,12 +1,14 @@
+import { eventBus } from "../core/EventBus.js";
+
 export class GameManager {
   constructor(scene) {
     this.scene = scene;
     this.score = 0;
     this.moves = 0;
 
-    // Listen for card selection events
-    this.scene.events.on("cardSelected", this.handleCardSelection, this);
-    this.scene.events.on("allMatched", this.handleAllMatched, this);
+    eventBus.on("gameManager:cardSelected", this.handleCardSelection, this);
+    eventBus.on("gameManager:allMatched", this.handleAllMatched, this);
+    eventBus.on("gameManager:playAgain", this.handlePlayAgain, this);
   }
 
   handleCardSelection({ selectedCards }) {
@@ -19,34 +21,34 @@ export class GameManager {
   checkMatch(selectedCards) {
     const [card1, card2] = selectedCards;
     // updae score
-    this.scene.hud.updateScore(1);
+    eventBus.emit("hud:updateScore", 1);
     // check match
     if (card1.cardData.id === card2.cardData.id) {
-      this.scene.sound.play("match");
-      this.scene.events.emit("matchSuccess", { card1, card2 });
+      eventBus.emit("sound:play", "match");
+      eventBus.emit("cardManager:matchSuccess", { card1, card2 });
     } else {
-      this.scene.sound.play("fail");
-      this.scene.events.emit("matchFailure", { card1, card2 });
+      eventBus.emit("sound:play", "fail");
+      eventBus.emit("cardManager:matchFailure", { card1, card2 });
     }
   }
 
   handlePlayAgain() {
-    this.scene.hud.clearCurrentScore();
-    this.scene.createGameCards();
+    eventBus.emit("hud:clearScore");
+    eventBus.emit("gameScene:createCards");
   }
 
   handleAllMatched() {
-    this.scene.hud.updateBestScore();
+    eventBus.emit("hud:updateBestScore");
     this.scene.time.delayedCall(800, () => {
-      this.scene.cardManager.clearCards();
-      this.scene.createVictory();
+      eventBus.emit("cardManager:clearCards");
+      eventBus.emit("gameScene:createVictory");
     });
     this.scene.time.delayedCall(1000, () => {
-      this.scene.sound.play("victory");
+      eventBus.emit("sound:play", "victory");
     });
   }
 
   destroy() {
-    this.scene.events.off("cardSelected", this.handleCardSelection, this);
+    eventBus.removeGroup("gameManager");
   }
 }

@@ -1,3 +1,5 @@
+import { eventBus } from "../core/EventBus.js";
+
 export class Button extends Phaser.GameObjects.Container {
   constructor(scene, x, y, text, config = {}) {
     super(scene, x, y);
@@ -33,6 +35,7 @@ export class Button extends Phaser.GameObjects.Container {
     this.on("pointerdown", () => this.bg.setTexture(texturePressed));
     this.on("pointerup", () => {
       this.bg.setTexture(texture);
+      eventBus.emit("sound:play", "flip");
       onClick();
     });
     this.on("pointerout", () => this.bg.setTexture(texture));

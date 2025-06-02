@@ -35,7 +35,7 @@ export class Preloader extends Phaser.Scene {
     this.load.audio("bgMusic", "assets/sounds/bg-music.mp3");
     this.load.audio("flip", "assets/sounds/flip.mp3");
     this.load.audio("match", "assets/sounds/match.mp3");
-    // this.load.audio("win", "assets/sounds/victory.mp3");
+    this.load.audio("victory", "assets/sounds/victory.mp3");
     this.load.audio("fail", "assets/sounds/fail.mp3");
   }
 

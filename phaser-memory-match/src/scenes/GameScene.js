@@ -1,9 +1,11 @@
 import { ThemeManager } from "../managers/ThemeManager.js";
 import { GameHUD } from "../gameObjects/GameHUD.js";
 import { CardManager } from "../managers/CardManager.js";
-import { GameManager } from '../managers/GameManager.js';
+import { GameManager } from "../managers/GameManager.js";
 import { VictoryPanel } from "../gameObjects/VictoryPanel.js";
-import { cards } from '../config/cards.js';
+import { cards } from "../config/cards.js";
+import { eventBus } from "../core/EventBus.js";
+
 export class GameScene extends Phaser.Scene {
   constructor() {
     super("GameScene");
@@ -11,6 +13,11 @@ export class GameScene extends Phaser.Scene {
     this.level = "easy";
     this.bgImgLeft = null;
     this.bgImgRight = null;
+
+    eventBus.on("gameScene:createCards", this.createGameCards, this);
+    eventBus.on("gameScene:createVictory", this.createVictory, this);
+    eventBus.on("gameScene:startGame", this.startGame, this);
+    eventBus.on("gameScene:exitGame", this.animationOut, this);
   }
 
   init(data) {
@@ -20,14 +27,12 @@ export class GameScene extends Phaser.Scene {
   preload() {
     this.loadThemeCards();
     this.load.image("victory", "assets/img_win.png");
-    this.load.audio("victory", "assets/sounds/victory.mp3");
   }
 
   create() {
     // initial hud
     this.hud = new GameHUD(this, {
       level: this.level,
-      onBack: this.animationOut.bind(this),
     });
 
     // Initialize managers
@@ -80,6 +85,10 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
+  startGame({ level }) {
+    animationOut();
+  }
+
   // Theme Cards
   loadThemeCards() {
     const currentTheme = this.themeManager.getCurrentTheme();
@@ -103,10 +112,26 @@ export class GameScene extends Phaser.Scene {
   createGameCards() {
     const levelConfig = cards[this.level];
     const themeConfig = this.themeManager.getCurrentTheme();
-    this.cardManager.createCards(levelConfig, themeConfig);
+    eventBus.emit("cardManager:createCards", { levelConfig, themeConfig });
   }
 
   createVictory() {
     this.victoryPanel = new VictoryPanel(this);
+  }
+
+  destroy() {
+    eventBus.removeGroup("gameScene");
+    
+    if (this.cardManager) {
+      this.cardManager.destroy();
+    }
+    if (this.gameManager) {
+      this.gameManager.destroy();
+    }
+    if (this.hud) {
+      this.hud.destroy();
+    }
+
+    super.destroy();
   }
 }

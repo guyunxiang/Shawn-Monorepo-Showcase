@@ -1,5 +1,6 @@
 import { capitalizeFirstLetter } from "../utils/string.js";
 import { Button } from "./Button.js";
+import { eventBus } from "../core/EventBus.js";
 
 export class GameHUD extends Phaser.GameObjects.Container {
   constructor(scene, config) {
@@ -21,6 +22,10 @@ export class GameHUD extends Phaser.GameObjects.Container {
     this._createClock();
 
     scene.add.existing(this);
+
+    eventBus.on("hud:clearScore", this.clearCurrentScore, this);
+    eventBus.on("hud:updateScore", this.updateScore, this);
+    eventBus.on("hud:updateBestScore", this.updateBestScore, this);
   }
 
   animationIn() {
@@ -68,8 +73,7 @@ export class GameHUD extends Phaser.GameObjects.Container {
         width: 120,
         height: 80,
         onClick: () => {
-          this.scene.sound.play("flip");
-          this.config?.onBack();
+          eventBus.emit("gameScene:exitGame");
         },
       }
     );
@@ -119,7 +123,6 @@ export class GameHUD extends Phaser.GameObjects.Container {
     const { centerX, width, height } = this.scene.cameras.main;
     const ky = 0.065;
     const kx = 0.15;
-    console.log(this.bestScoreValue);
     this.bestTextObj = this.scene.add.text(
       centerX + width * kx,
       height * ky,
@@ -201,6 +204,7 @@ export class GameHUD extends Phaser.GameObjects.Container {
   }
 
   destroy() {
+    eventBus.removeGroup("hud");
     if (this.clockEvent) {
       this.clockEvent.remove(false);
     }

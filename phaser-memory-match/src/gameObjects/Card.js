@@ -1,3 +1,5 @@
+import { eventBus } from "../core/EventBus.js";
+
 export class Card extends Phaser.GameObjects.Container {
   constructor(scene, x, y, config = {}) {
     super(scene, x, y);
@@ -125,12 +127,10 @@ export class Card extends Phaser.GameObjects.Container {
   performFlip(toFront) {
     return new Promise((resolve) => {
       this.isFlipping = true;
-      const { flipDuration, flipSound } = this.config;
+      const { flipDuration } = this.config;
 
       // Play flip sound
-      if (flipSound && this.scene.sound) {
-        this.scene.sound.play(flipSound);
-      }
+      eventBus.emit("sound:play", "flip");
 
       // First phase: compress to 0
       this.scene.tweens.add({

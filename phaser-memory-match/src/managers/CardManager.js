@@ -1,4 +1,5 @@
 import { Card } from "../gameObjects/Card.js";
+import { eventBus } from "../core/EventBus.js";
 
 export class CardManager extends Phaser.GameObjects.Container {
   constructor(scene, config) {
@@ -11,16 +12,15 @@ export class CardManager extends Phaser.GameObjects.Container {
     this.isProcessing = false;
     this.matchedCount = 0;
 
-    // Listen for match events
-    this.scene.events.on("matchFailure", this.handleMatchFailure, this);
-    this.scene.events.on("matchSuccess", this.handleMatchSuccess, this);
-
-    this.scene.events.on("shutdown", this.destroy, this);
+    eventBus.on("cardManager:createCards", this.createCards, this);
+    eventBus.on("cardManager:clearCards", this.clearCards, this);
+    eventBus.on("cardManager:matchSuccess", this.handleMatchSuccess, this);
+    eventBus.on("cardManager:matchFailure", this.handleMatchFailure, this);
 
     scene.add.existing(this);
   }
 
-  createCards(levelConfig, themeConfig) {
+  createCards({ levelConfig, themeConfig }) {
     // Clear existing cards
     this.clearCards();
 
@@ -56,7 +56,6 @@ export class CardManager extends Phaser.GameObjects.Container {
     const rows = Math.ceil((pairs * 2) / cols);
     let cardWidth = 135;
     let cardHeight = 180;
-    let horizontalPadding = 20;
     let padding = 20;
 
     if (rows > 2) {
@@ -71,7 +70,8 @@ export class CardManager extends Phaser.GameObjects.Container {
         cardWidth / 2,
       startY:
         (this.scene.cameras.main.height - rows * (cardHeight + padding)) / 2 +
-        cardHeight / 2 + 35,
+        cardHeight / 2 +
+        35,
       cardWidth,
       cardHeight,
       padding,
@@ -114,7 +114,7 @@ export class CardManager extends Phaser.GameObjects.Container {
     if (this.selectedCards.length === 2) {
       this.isProcessing = true;
     }
-    this.scene.events.emit("cardSelected", {
+    eventBus.emit("gameManager:cardSelected", {
       card,
       selectedCards: this.selectedCards,
     });
@@ -160,21 +160,16 @@ export class CardManager extends Phaser.GameObjects.Container {
 
     this.matchedCount += 2;
     if (this.matchedCount === this.cards.length) {
-      this.scene.events.emit("allMatched");
+      eventBus.emit("gameManager:allMatched");
     }
   }
 
   destroy() {
     // Clean up event listeners
-    this.scene.events.off("matchFailure", this.handleMatchFailure, this);
-    this.scene.events.off("matchSuccess", this.handleMatchSuccess, this);
-    this.scene.events.off("shutdown", this.destroy, this);
-
+    eventBus.removeGroup("cardManager");
     // Clean up cards
-    this.cards.forEach((card) => card.destroy());
-    this.cards = [];
-    this.selectedCards = [];
-    this.isProcessing = false;
+    this.clearCards();
+    this.scene = null;
 
     // Call parent destroy
     super.destroy();

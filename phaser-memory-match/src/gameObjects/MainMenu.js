@@ -1,5 +1,6 @@
 import { Button } from "./Button.js";
 import { Card } from "./Card.js";
+import { eventBus } from "../core/EventBus.js";
 
 export class MainMenu extends Phaser.GameObjects.Container {
   constructor(scene, config) {
@@ -118,9 +119,7 @@ export class MainMenu extends Phaser.GameObjects.Container {
         width: width,
         height: 80,
         onClick: () => {
-          this.scene.level = level;
-          this.scene.sound.play("flip");
-          this.scene.animationOut();
+          eventBus.emit("mainScene:startGame", { level });
         },
       });
     });

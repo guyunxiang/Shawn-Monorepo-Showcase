@@ -1,4 +1,5 @@
 import { Button } from "./Button.js";
+import { eventBus } from "../core/EventBus.js";
 
 export class VictoryPanel extends Phaser.GameObjects.Container {
   constructor(scene, config) {
@@ -30,19 +31,22 @@ export class VictoryPanel extends Phaser.GameObjects.Container {
     const k = 0.85;
     const { centerX, height } = this.scene.cameras.main;
     const y = height * k;
-    const { gameManager, animationOut } = this.scene;
     const buttonConfigs = [
       {
         text: "Play Again",
         x: centerX - gap,
         width: 160,
-        onClick: gameManager.handlePlayAgain.bind(this),
+        onClick: () => {
+          eventBus.emit("gameManager:playAgain");
+        }
       },
       {
         text: "Main Menu",
         x: centerX + gap,
         width: 160,
-        onClick: animationOut.bind(this.scene),
+        onClick: () => {
+          eventBus.emit("gameScene:exitGame");
+        }
       },
     ];
     const buttons = [];

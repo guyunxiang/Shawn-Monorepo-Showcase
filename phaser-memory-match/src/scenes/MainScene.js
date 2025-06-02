@@ -1,19 +1,29 @@
 import { ThemeManager } from "../managers/ThemeManager.js";
 import { MainMenu } from "../gameObjects/MainMenu.js";
+import { eventBus } from "../core/EventBus.js";
+import { SoundManager } from "../managers/SoundManager.js";
 
 export class MainScene extends Phaser.Scene {
   constructor() {
     super("MainScene");
     this.themeManager = new ThemeManager();
     this.bgm = null;
+
+    eventBus.on("mainScene:startGame", this.startGame, this);
   }
 
   create() {
     this.createBgImage();
     this.createBgMusic();
 
+    this.soundManager = new SoundManager(this);
     this.mainmenu = new MainMenu(this);
     this.animationIn();
+  }
+
+  startGame({ level }) {
+    this.level = level;
+    this.animationOut();
   }
 
   // Background Music
