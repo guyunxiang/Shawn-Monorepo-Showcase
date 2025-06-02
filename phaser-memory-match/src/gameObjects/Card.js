@@ -255,6 +255,7 @@ export class Card extends Phaser.GameObjects.Container {
 
   // Clean up when destroyed
   destroy() {
+    eventBus.removeGroup("card");
     // Stop all animations
     this.scene.tweens.killTweensOf(this);
     super.destroy();

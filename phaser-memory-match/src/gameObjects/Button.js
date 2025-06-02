@@ -42,4 +42,9 @@ export class Button extends Phaser.GameObjects.Container {
 
     scene.add.existing(this);
   }
+
+  destroy() {
+    eventBus.removeGroup("button");
+    super.destroy();
+  }
 }

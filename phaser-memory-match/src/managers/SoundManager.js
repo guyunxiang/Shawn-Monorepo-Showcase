@@ -64,11 +64,7 @@ export class SoundManager {
   }
 
   destroy() {
-    eventBus.off("sound:play", this.playSound, this);
-    eventBus.off("sound:stop", this.stopSound, this);
-    eventBus.off("sound:toggleMute", this.toggleMute, this);
-    eventBus.off("sound:playBGM", this.playBGM, this);
-    eventBus.off("sound:stopBGM", this.stopBGM, this);
+    eventBus.removeGroup("sound");
     
     Object.values(this.sounds).forEach(sound => {
       sound.stop();

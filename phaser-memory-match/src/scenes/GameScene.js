@@ -16,8 +16,7 @@ export class GameScene extends Phaser.Scene {
 
     eventBus.on("gameScene:createCards", this.createGameCards, this);
     eventBus.on("gameScene:createVictory", this.createVictory, this);
-    eventBus.on("gameScene:startGame", this.startGame, this);
-    eventBus.on("gameScene:exitGame", this.animationOut, this);
+    eventBus.on("gameScene:exitGame", this.exitGame, this);
   }
 
   init(data) {
@@ -85,8 +84,8 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  startGame({ level }) {
-    animationOut();
+  exitGame() {
+    this.animationOut();
   }
 
   // Theme Cards

@@ -8,15 +8,19 @@ export class MainScene extends Phaser.Scene {
     super("MainScene");
     this.themeManager = new ThemeManager();
     this.bgm = null;
+    this.soundManager = null;
+    this.mainmenu = null;
 
     eventBus.on("mainScene:startGame", this.startGame, this);
   }
 
   create() {
     this.createBgImage();
-    this.createBgMusic();
 
-    this.soundManager = new SoundManager(this);
+    if (!this.soundManager) {
+      this.soundManager = new SoundManager(this);
+      eventBus.emit("sound:playBGM");
+    }
     this.mainmenu = new MainMenu(this);
     this.animationIn();
   }
@@ -24,17 +28,6 @@ export class MainScene extends Phaser.Scene {
   startGame({ level }) {
     this.level = level;
     this.animationOut();
-  }
-
-  // Background Music
-  createBgMusic() {
-    if (!this.bgm) {
-      this.bgm = this.sound.add("bgMusic", {
-        volume: 0.5,
-        loop: true,
-      });
-      this.bgm.play();
-    }
   }
 
   animationIn() {
@@ -97,5 +90,16 @@ export class MainScene extends Phaser.Scene {
     );
   }
 
-  update() {}
+  destroy() {
+    eventBus.removeGroup("mainScene");
+    if (this.soundManager) {
+      this.soundManager.destroy();
+      this.soundManager = null;
+    }
+    if (this.mainmenu) {
+      this.mainmenu.destroy();
+      this.mainmenu = null;
+    }
+    super.destroy();
+  }
 }

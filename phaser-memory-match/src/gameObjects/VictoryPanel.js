@@ -2,7 +2,7 @@ import { Button } from "./Button.js";
 import { eventBus } from "../core/EventBus.js";
 
 export class VictoryPanel extends Phaser.GameObjects.Container {
-  constructor(scene, config) {
+  constructor(scene) {
     super(scene, 0, 0);
 
     scene.add.existing(this);
