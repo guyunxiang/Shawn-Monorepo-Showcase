@@ -1,17 +1,29 @@
 import { Card } from "../gameObjects/Card.js";
 import { eventBus } from "../core/EventBus.js";
 
+/**
+ * CardManager - Manages the memory card game cards
+ * Handles card creation, layout, matching logic, and card interactions
+ * Extends Phaser.GameObjects.Container to manage multiple cards as a group
+ */
 export class CardManager extends Phaser.GameObjects.Container {
+  /**
+   * Initialize the card manager
+   * @param {Phaser.Scene} scene - The scene instance to manage cards in
+   * @param {Object} config - Configuration object containing theme manager
+   */
   constructor(scene, config) {
     super(scene);
     this.scene = scene;
     this.config = config;
 
+    // Initialize card tracking arrays and state
     this.cards = [];
     this.selectedCards = [];
     this.isProcessing = false;
     this.matchedCount = 0;
 
+    // Set up event listeners for card management
     eventBus.on("cardManager:createCards", this.createCards, this);
     eventBus.on("cardManager:clearCards", this.clearCards, this);
     eventBus.on("cardManager:matchSuccess", this.handleMatchSuccess, this);
@@ -20,6 +32,12 @@ export class CardManager extends Phaser.GameObjects.Container {
     scene.add.existing(this);
   }
 
+  /**
+   * Create a new set of cards based on level and theme configuration
+   * @param {Object} param0 - Configuration parameters
+   * @param {Object} param0.levelConfig - Level configuration containing pairs and columns
+   * @param {Object} param0.themeConfig - Theme configuration containing card textures
+   */
   createCards({ levelConfig, themeConfig }) {
     // Clear existing cards
     this.clearCards();
@@ -37,6 +55,12 @@ export class CardManager extends Phaser.GameObjects.Container {
     this.createCardInstances(cardData, layout);
   }
 
+  /**
+   * Create pairs of cards with matching IDs
+   * @param {number} pairs - Number of card pairs to create
+   * @param {Array} textures - Array of card texture names
+   * @returns {Array} Shuffled array of card data objects
+   */
   createCardPairs(pairs, textures) {
     const cardData = [];
 
@@ -52,12 +76,19 @@ export class CardManager extends Phaser.GameObjects.Container {
     return this.shuffleCards(cardData);
   }
 
+  /**
+   * Calculate the layout parameters for card positioning
+   * @param {number} pairs - Number of card pairs
+   * @param {number} cols - Number of columns in the layout
+   * @returns {Object} Layout configuration object
+   */
   calculateLayout(pairs, cols) {
     const rows = Math.ceil((pairs * 2) / cols);
     let cardWidth = 135;
     let cardHeight = 180;
     let padding = 20;
 
+    // Adjust card size for larger layouts
     if (rows > 2) {
       cardWidth = 120;
       cardHeight = 160;
@@ -80,6 +111,11 @@ export class CardManager extends Phaser.GameObjects.Container {
     };
   }
 
+  /**
+   * Create and position card instances based on layout
+   * @param {Array} cardData - Array of card data objects
+   * @param {Object} layout - Layout configuration object
+   */
   createCardInstances(cardData, layout) {
     cardData.forEach((data, index) => {
       const col = index % layout.cols;
@@ -100,6 +136,10 @@ export class CardManager extends Phaser.GameObjects.Container {
     });
   }
 
+  /**
+   * Handle card click events
+   * @param {Card} card - The clicked card instance
+   */
   onCardClick(card) {
     if (
       this.isProcessing ||
@@ -120,6 +160,9 @@ export class CardManager extends Phaser.GameObjects.Container {
     });
   }
 
+  /**
+   * Clear all cards and reset state
+   */
   clearCards() {
     this.cards.forEach((card) => card.destroy());
     this.cards = [];
@@ -128,12 +171,20 @@ export class CardManager extends Phaser.GameObjects.Container {
     this.matchedCount = 0;
   }
 
+  /**
+   * Reset all cards to face-down position
+   */
   resetCards() {
     this.cards.forEach((card) => card.showBack());
     this.selectedCards = [];
     this.isProcessing = false;
   }
 
+  /**
+   * Shuffle an array using Fisher-Yates algorithm
+   * @param {Array} array - Array to shuffle
+   * @returns {Array} Shuffled array
+   */
   shuffleCards(array) {
     const newArray = [...array];
     for (let i = newArray.length - 1; i > 0; i--) {
@@ -143,6 +194,12 @@ export class CardManager extends Phaser.GameObjects.Container {
     return newArray;
   }
 
+  /**
+   * Handle unsuccessful card match
+   * @param {Object} param0 - Match parameters
+   * @param {Card} param0.card1 - First card in the match
+   * @param {Card} param0.card2 - Second card in the match
+   */
   handleMatchFailure({ card1, card2 }) {
     // Wait for a short delay before flipping cards back
     this.scene.time.delayedCall(1000, () => {
@@ -153,6 +210,12 @@ export class CardManager extends Phaser.GameObjects.Container {
     });
   }
 
+  /**
+   * Handle successful card match
+   * @param {Object} param0 - Match parameters
+   * @param {Card} param0.card1 - First card in the match
+   * @param {Card} param0.card2 - Second card in the match
+   */
   handleMatchSuccess({ card1, card2 }) {
     // Keep cards face up and remove them from selection
     this.selectedCards = [];
@@ -164,6 +227,10 @@ export class CardManager extends Phaser.GameObjects.Container {
     }
   }
 
+  /**
+   * Clean up card manager resources
+   * Removes event listeners and destroys all cards
+   */
   destroy() {
     // Clean up event listeners
     eventBus.removeGroup("cardManager");
